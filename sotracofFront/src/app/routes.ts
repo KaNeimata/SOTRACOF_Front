@@ -12,15 +12,15 @@ import { ProfileComponent } from "./shared/account/profile/profile.component";
 import { ReglementComponent } from "./pages/reglement/reglement.component";
 
 export const appRoutes: Routes = [
-    { path: '', component: LoginComponent },
-    { path: 'accueil', component: DashboardComponent },
-    { path: 'signup', component: RegisterComponent },
-    { path: 'profil', component: ProfileComponent },
-    { path: 'listeFactures', component: FacturationComponent },
-    { path: 'listeClients', component: ClientsComponent },
-    { path: 'listePrestations', component: PrestationsComponent },
-    { path: 'listeSignataires', component: SignatairesComponent },
-    { path: 'listeModels', component: ModelFactureComponent },
-    { path: 'listeIntitules', component: IntitulesComponent },
-    { path: 'paiement', component: ReglementComponent },
+  { path: '', component: LoginComponent },
+  { path: 'accueil', component: DashboardComponent },
+  { path: 'signup', component: RegisterComponent },
+  { path: 'profil', component: ProfileComponent },
+  { path: 'listeFactures', component: FacturationComponent },
+  { path: 'listeClients', component: ClientsComponent },
+  { path: 'listePrestations', component: PrestationsComponent },
+  { path: 'listeSignataires', component: SignatairesComponent },
+  { path: 'listeModels', component: ModelFactureComponent },
+  { path: 'listeIntitules', component: IntitulesComponent },
+  { path: 'paiement', component: ReglementComponent },
 ];

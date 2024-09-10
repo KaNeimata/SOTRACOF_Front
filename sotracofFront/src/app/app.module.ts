@@ -1,10 +1,9 @@
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,6 +22,7 @@ import { IntitulesComponent } from './pages/intitules/intitules.component';
 import { ModelFactureComponent } from './pages/model-facture/model-facture.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './shared/account/profile/profile.component';
+import { NgPrimeModule } from './ng-prime.module';
 
 @NgModule({
   declarations: [
@@ -49,7 +49,8 @@ import { ProfileComponent } from './shared/account/profile/profile.component';
     BrowserAnimationsModule,
     NgxSpinnerModule,
     ButtonModule,
-    CheckboxModule
+    CheckboxModule,
+    NgPrimeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

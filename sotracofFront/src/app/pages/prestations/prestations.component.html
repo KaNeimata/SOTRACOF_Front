@@ -1,4 +1,77 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
-<app-main-content-wrapper></app-main-content-wrapper>
-<app-main-footer></app-main-footer>
+
+<div class="wrapper">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="padding: 20px;">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Listes des Prestations</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <div class="d-flex justify-content-end mb-4" style="padding-right: 20px;">
+            <button pButton icon="pi pi-plus" label="Ajouter Prestation" class="btn btn-primary"
+                (click)="CreerPrestation()">
+            </button>
+        </div>
+        <p-table [value]="prestations">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Nom</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-prestation>
+                <tr>
+                    <td>{{ prestation.nom }}</td>
+                    <td>
+                        <button pButton icon="pi pi-pencil" (click)="editPrestation(prestation)"
+                            label="Modifier"></button>
+                        <button pButton icon="pi pi-trash" (click)="deletePrestation(prestation.id)"
+                            label="Supprimer"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [responsive]="true" [baseZIndex]="10000" [style]="{
+                    'width': '600px'
+                }">
+            <div class="card">
+                <div class="card-header">
+                    {{ editMode ? 'Modifier cette Prestation' : 'Ajouter une Prestation' }}
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="prestationForm" (ngSubmit)="savePrestation()">
+                        <div class="p-fluid p-formgrid p-grid justify-content-center">
+                            <div class="p-field p-col-12">
+                                <label for="nom" class="mb-2">Nom</label>
+                                <input id="nom" type="text" class="form-control mb-2" formControlName="nom" />
+                                <div *ngIf="f['nom'].invalid && f['nom'].touched" class="text-danger">
+                                    <small *ngIf="f['nom'].errors?.['required']">Le nom est requis.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;" (click)="cancel()">Annuler</button>
+                            <button type="submit" class="btn btn-primary" [disabled]="prestationForm.invalid">{{
+                                editMode ?
+                                'Mettre à jour' : 'Ajouter' }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </p-dialog>
+        <!-- /.content -->
+    </div>
+
+    <app-main-footer></app-main-footer>
