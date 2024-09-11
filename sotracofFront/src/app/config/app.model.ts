@@ -27,6 +27,6 @@ export interface Facture{
 export interface TypePrestation{
     id?: Number;
     nom?: String;
-    factureList?: Facture[];
-    ligneFactureList?: LigneFacture[];
+    // factureList?: Facture[];
+    // ligneFactureList?: LigneFacture[];
 }

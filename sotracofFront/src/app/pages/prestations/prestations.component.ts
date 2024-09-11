@@ -28,12 +28,8 @@ export class PrestationsComponent implements OnInit {
     this.prestationService.getAllPrestation().subscribe(
       (response) => {
       this.prestations = response.body || [];
-      console.log('Success:', this.prestations);
+      console.log('Success: donnee charger', this.prestations);
       }
-    //   (error) => {
-    //   // Gérer les erreurs ici
-    //   console.error('Error:', error);
-    // }
     );
   }
 
@@ -60,7 +56,7 @@ export class PrestationsComponent implements OnInit {
     if (this.prestationForm.valid) {
       const prestationData = this.prestationForm.value;
       if (this.editMode) {
-        this.prestationService.updateTPrestation(this.selectedPrestation.id, prestationData).subscribe(() => this.getAllPrestations());
+        this.prestationService.updateTPrestation(prestationData).subscribe(() => this.getAllPrestations());
       } else {
         this.prestationService.createTPrestation(prestationData).subscribe(() => this.getAllPrestations());
       }
