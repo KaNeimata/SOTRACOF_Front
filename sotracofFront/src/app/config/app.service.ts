@@ -38,7 +38,7 @@ export class AppServices {
   // ===============================service prestation ==========================
     
     getAllPrestation(): Observable<HttpResponse<any[]>> {
-    return this.http.get<TypePrestation[]>(`${AppEndpoint.TYPE_PRESTATION_URL}/list`, {observe: 'response'});
+    return this.http.get<TypePrestation[]>(`${AppEndpoint.TYPE_PRESTATION_URL}`, {observe: 'response'});
     }
 
     getPrestationById(id: Number): Observable<HttpResponse<Client>> {

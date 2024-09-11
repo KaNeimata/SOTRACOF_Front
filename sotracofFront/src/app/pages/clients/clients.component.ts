@@ -61,7 +61,19 @@ export class ClientsComponent implements OnInit{
     this.selectedClient = client;
   }
   addClient(clt: Client) {
-    if (clt.id == null) {
+    if (this.cltForm.valid) {
+      const clt = this.cltForm.value;
+        if (this.editMode) {
+      if (clt.id != null){
+      this.appService.updateClient(clt.id, clt).subscribe(
+        (res) => {
+          console.log('Client MAJ reussie')
+        }
+        
+      )
+    }
+    }
+       else {
       this.appService.createClient(this.selectedClient).subscribe(
       (res) => {
          if (res.body) {
@@ -71,13 +83,7 @@ export class ClientsComponent implements OnInit{
       }
         }
     );
-    } else {
-      this.appService.updateClient(clt.id, clt).subscribe(
-        (res) => {
-          console.log('Client MAJ reussie')
-        }
-        
-      )
+    }
     }
   }
 
