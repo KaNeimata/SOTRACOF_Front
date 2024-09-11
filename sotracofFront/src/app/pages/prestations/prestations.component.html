@@ -43,9 +43,8 @@
             </ng-template>
         </p-table>
 
-        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [responsive]="true" [baseZIndex]="10000" [style]="{
-                    'width': '600px'
-                }">
+        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [responsive]="true" [baseZIndex]="10000"
+            [style]="{'width': '600px'}" [contentStyle]="{ 'backdrop-filter': 'blur(10px)' }">
             <div class="card">
                 <div class="card-header">
                     {{ editMode ? 'Modifier cette Prestation' : 'Ajouter une Prestation' }}
@@ -62,7 +61,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;" (click)="cancel()">Annuler</button>
+                            <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;"
+                                (click)="cancel()">Annuler</button>
                             <button type="submit" class="btn btn-primary" [disabled]="prestationForm.invalid">{{
                                 editMode ?
                                 'Mettre à jour' : 'Ajouter' }}</button>
@@ -75,3 +75,4 @@
     </div>
 
     <app-main-footer></app-main-footer>
+</div>

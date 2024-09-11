@@ -1,4 +1,83 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
-<app-main-content-wrapper></app-main-content-wrapper>
+<div class="wrapper">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Listes des clients</h1>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <button type="button" class="btn btn-secondary">Ajouter</button>
+
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <table class="table table-bordered table-striped">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Adresse</th>
+                                            <th>Telephone</th>
+                                            <!-- <th>Engine version</th>
+                                            <th>CSS grade</th> -->
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- <tr *ngfor="let i of clients">
+                                            <td>{{ i.nom }}</td>
+                                            <td>{{ i.adresse }}</td>
+                                            <td>{{ i.tel }}</td>
+                                            <td>
+                                            <div class="btn-group">
+                                                <button type="button" routerLink="/update/" class="btn btn-primary">D</button>
+                                                <button type="button" class="btn btn-secondary">M</button>
+                                                <button type="button" class="btn btn-danger">S</button>
+                                            </div>
+                                            </td>
+                                        </tr> -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Adresse</th>
+                                            <th>Telephone</th>
+                                            <th>Action</th>
+                                            <!-- <th>Engine version</th>
+                                            <th>CSS grade</th> -->
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+</div>
 <app-main-footer></app-main-footer>

@@ -25,9 +25,16 @@ export class PrestationsComponent implements OnInit {
   }
 
   getAllPrestations(): void {
-    this.prestationService.getAllPrestation().subscribe((response) => {
+    this.prestationService.getAllPrestation().subscribe(
+      (response) => {
       this.prestations = response.body || [];
-    });
+      console.log('Success:', this.prestations);
+      }
+    //   (error) => {
+    //   // Gérer les erreurs ici
+    //   console.error('Error:', error);
+    // }
+    );
   }
 
   initForm(): void {
