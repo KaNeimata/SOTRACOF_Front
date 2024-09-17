@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Client, TypePrestation } from './app.model';
+import { Client, DivisionFiscale, Signataire, TypePrestation } from './app.model';
 import { Observable } from "rxjs";
 import { AppEndpoint } from "./app.endpoint";
 
@@ -17,21 +17,21 @@ export class AppServices {
     return this.http.get<any[]>(`${AppEndpoint.CLIENT_URL}`, {observe: 'response'});
     }
 
-    getClientById(id: Number): Observable<HttpResponse<Client>> {
+    getClientById(id: number): Observable<HttpResponse<Client>> {
     return this.http.get<Client>(`${AppEndpoint.CLIENT_URL}/${id}`, { observe: 'response' });
     }
 
     createClient(client: Client): Observable<HttpResponse<Client>> {
-        return this.http.post<Client>(`${AppEndpoint.CLIENT_URL}/create`, client, { observe: 'response' });
+        return this.http.post<Client>(`${AppEndpoint.CLIENT_URL}`, client, { observe: 'response' });
     }
     
     
-    updateClient(id: Number, client: Client): Observable<HttpResponse<Client>> {
-    return this.http.put<Client>(`${AppEndpoint.CLIENT_URL}/update/${id}`, client, { observe: 'response' });
+    updateClient(client: Client): Observable<HttpResponse<Client>> {
+    return this.http.put<Client>(`${AppEndpoint.CLIENT_URL}`, client, { observe: 'response' });
     }
     
-    deleteClient(id: Number): Observable<HttpResponse<Client>> {
-    return this.http.delete(`${AppEndpoint.CLIENT_URL}/delete/${id}`, { observe: 'response' });
+    deleteClient(id: number): Observable<HttpResponse<Client>> {
+    return this.http.delete(`${AppEndpoint.CLIENT_URL}/${id}`, { observe: 'response' });
   }
 
 
@@ -54,7 +54,53 @@ export class AppServices {
     return this.http.put<TypePrestation>(`${AppEndpoint.TYPE_PRESTATION_URL}`, prestation, { observe: 'response' });
     }
     
-    deleteTPresatation(id: Number): Observable<HttpResponse<TypePrestation>> {
+    deleteTPresatation(id: number): Observable<HttpResponse<TypePrestation>> {
     return this.http.delete(`${AppEndpoint.TYPE_PRESTATION_URL}/${id}`, { observe: 'response' });
+  }
+
+
+  // ===============================service Signaitre ==========================
+    
+    getAllSignataire(): Observable<HttpResponse<any[]>> {
+    return this.http.get<Signataire[]>(`${AppEndpoint.SIGNATAIRE_URL}`, {observe: 'response'});
+    }
+
+    getSignataireById(id: Number): Observable<HttpResponse<Client>> {
+    return this.http.get<Signataire>(`${AppEndpoint.SIGNATAIRE_URL}/${id}`, { observe: 'response' });
+    }
+
+    createSignataire(signataire: Signataire): Observable<HttpResponse<Signataire>> {
+        return this.http.post<Signataire>(`${AppEndpoint.SIGNATAIRE_URL}`, signataire, { observe: 'response' });
+    }
+    
+    
+    updateSignataire(signataire: Signataire): Observable<HttpResponse<Signataire>> {
+    return this.http.put<Signataire>(`${AppEndpoint.SIGNATAIRE_URL}`, signataire, { observe: 'response' });
+    }
+    
+    deleteSignataire(id: Number): Observable<HttpResponse<Signataire>> {
+    return this.http.delete(`${AppEndpoint.SIGNATAIRE_URL}/${id}`, { observe: 'response' });
+  }
+
+   // =============================== service divfiscal ==========================
+    
+    getDivisions(): Observable<HttpResponse<any[]>> {
+    return this.http.get<DivisionFiscale[]>(`${AppEndpoint.DIVISION_FISCALE_URL}`, {observe: 'response'});
+    }
+
+    getDivisionById(id: Number): Observable<HttpResponse<DivisionFiscale>> {
+    return this.http.get<DivisionFiscale>(`${AppEndpoint.DIVISION_FISCALE_URL}/${id}`, { observe: 'response' });
+    }
+
+    createDivision(division: DivisionFiscale): Observable<HttpResponse<DivisionFiscale>> {
+        return this.http.post<DivisionFiscale>(`${AppEndpoint.DIVISION_FISCALE_URL}`, division, { observe: 'response' });
+    }
+    
+    updateDivision(division: DivisionFiscale): Observable<HttpResponse<DivisionFiscale>> {
+    return this.http.put<DivisionFiscale>(`${AppEndpoint.DIVISION_FISCALE_URL}`, division, { observe: 'response' });
+    }
+    
+    deleteDivision(id: Number): Observable<HttpResponse<DivisionFiscale>> {
+    return this.http.delete(`${AppEndpoint.DIVISION_FISCALE_URL}/${id}`, { observe: 'response' });
   }
 }

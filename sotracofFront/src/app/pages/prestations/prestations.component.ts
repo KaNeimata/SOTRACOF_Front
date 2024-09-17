@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { Validators, FormGroup, FormBuilder} from '@angular/forms';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TypePrestation } from 'src/app/config/app.model';
 import {AppServices} from 'src/app/config/app.service';
 
@@ -16,7 +17,9 @@ export class PrestationsComponent implements OnInit {
   selectedPrestation: TypePrestation;
 
   constructor(private prestationService: AppServices,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private confirmService: ConfirmationService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -49,16 +52,18 @@ export class PrestationsComponent implements OnInit {
     this.prestationForm.patchValue(prestation);
     this.editMode = true;
     this.displayDialog = true;
-    this.selectedPrestation = prestation;
+    // this.selectedPrestation = prestation;
   }
 
   savePrestation(): void {
     if (this.prestationForm.valid) {
       const prestationData = this.prestationForm.value;
-      if (this.editMode) {
+      if (this.editMode && this.selectedPrestation?.id) {
+      prestationData.id = this.selectedPrestation.id;
         this.prestationService.updateTPrestation(prestationData).subscribe(() => this.getAllPrestations());
       } else {
         this.prestationService.createTPrestation(prestationData).subscribe(() => this.getAllPrestations());
+        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
       }
       this.displayDialog = false;
     } else {
@@ -68,7 +73,12 @@ export class PrestationsComponent implements OnInit {
 
   deletePrestation(id: number): void {
     this.prestationService.deleteTPresatation(id).subscribe(() => this.getAllPrestations());
+  
   }
+  
+
+
+  
 
   cancel(): void {
     this.displayDialog = false;

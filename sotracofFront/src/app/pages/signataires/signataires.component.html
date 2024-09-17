@@ -1,83 +1,135 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
 <div class="wrapper">
-
-
     <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="padding: 30px;">
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Listes des clients</h1>
+                        <h1>Listes des signataires</h1>
                     </div>
                 </div>
             </div><!-- /.container-fluid -->
         </section>
 
         <!-- Main content -->
-        <section class="content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12">
+        <!-- <p-toast></p-toast> -->
 
-                        <div class="card">
-                            <div class="card-header">
-                                <button type="button" class="btn btn-secondary">Ajouter</button>
-
-                            </div>
-                            <!-- /.card-header -->
-                            <div class="card-body">
-                                <table class="table table-bordered table-striped">
-
-                                    <thead>
-                                        <tr>
-                                            <th>Nom</th>
-                                            <th>Adresse</th>
-                                            <th>Telephone</th>
-                                            <!-- <th>Engine version</th>
-                                            <th>CSS grade</th> -->
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- <tr *ngfor="let i of clients">
-                                            <td>{{ i.nom }}</td>
-                                            <td>{{ i.adresse }}</td>
-                                            <td>{{ i.tel }}</td>
-                                            <td>
-                                            <div class="btn-group">
-                                                <button type="button" routerLink="/update/" class="btn btn-primary">D</button>
-                                                <button type="button" class="btn btn-secondary">M</button>
-                                                <button type="button" class="btn btn-danger">S</button>
-                                            </div>
-                                            </td>
-                                        </tr> -->
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Nom</th>
-                                            <th>Adresse</th>
-                                            <th>Telephone</th>
-                                            <th>Action</th>
-                                            <!-- <th>Engine version</th>
-                                            <th>CSS grade</th> -->
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
+        <div class="card">
+            <div class="d-flex justify-content-end mb-4" style="padding-right: 20px;" class="card-body">
+                <button pButton icon="pi pi-plus" label="Ajouter" class="btn btn-primary" (click)="addSignataire()">
+                </button>
             </div>
-            <!-- /.container-fluid -->
-        </section>
+
+            <div style="padding: 20px;">
+                <p-table [value]="signataires" class="table small-column-width" styleClass="p-datatable-gridlines">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Nom </th>
+                            <th>Description</th>
+                            <th>Titre</th>
+                            <th style="width: 250px;  text-align: center;">Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-signataire>
+                        <tr>
+                            <td>{{signataire.nom}}</td>
+                            <td>{{signataire.description}}</td>
+                            <td>{{signataire.titre}}</td>
+
+                            <td style="width: 250px;">
+                                <button pButton pRipple icon="pi pi-pencil" class="btn btn-primary btn-sm me-2"
+                                    style="margin-right: 10px;" (click)="editSignataire(signataire)">Modifier</button>
+                                <button pButton pRipple icon="pi pi-trash" class="btn btn-danger btn-sm me-2"
+                                    (click)="deleteSignataire(signataire)">Suppimer</button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <th>Nom </th>
+                            <th>Description</th>
+                            <th>Titre</th>
+                            <th style="width: 250px; text-align: center;">Actions</th>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+
+        <!-- <div class="card">
+        <div >
+            <p-table [value]="" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                    </tr>
+                </ng-template>
+                <ng-template >
+                    <tr>
+                        <td>Code</td>
+                        <td>Name</td>
+                        <td>Category</td>
+                        <td>Quantity</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+     -->
+        <p-dialog [style]="{width: '450px'}" header="Product Details" [modal]="true" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <!-- <img [src]="'assets/showcase/images/demo/product/' + product.image" [alt]="product.image" class="product-image"
+                *ngIf="product.image"> -->
+                <div class="field">
+                    <label for="name">Nom</label>
+                    <input type="text" pInputText id="name" [(ngModel)]="signataire.nom" required autofocus />
+                    <small class="p-error" *ngIf="submitted && !signataire.nom">Nom est obligatoire</small>
+                </div>
+                <div class="field">
+                    <label for="description">Description</label>
+                    <textarea id="description" pInputTextarea [(ngModel)]="signataire.description" required rows="3"
+                        cols="20"></textarea>
+                </div>
+
+                <!-- <div class="field">
+                <label for="inventoryStatus">Inventory Status</label>
+                <p-dropdown [(ngModel)]="signataire.inventoryStatus" inputId="inventoryStatus"
+                    placeholder="Select">
+                    <ng-template let-option pTemplate="item">
+                        <span [class]="'product-badge status-' + option.value">{{option.label}}</span>
+                    </ng-template>
+                </p-dropdown>
+            </div> -->
+
+                <div class="formgrid grid">
+                    <!-- <div class="field col">
+                    <label for="price">Price</label>
+                    <p-inputNumber id="price" mode="currency" currency="USD"
+                        locale="en-US"></p-inputNumber>
+                </div> -->
+                    <!-- <div class="field col">
+                    <label for="quantity">Quantity</label>
+                    <p-inputNumber id="quantity" ></p-inputNumber>
+                </div> -->
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+                    (click)="saveSignataire()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
         <!-- /.content -->
     </div>
+
+    <!-- <app-main-footer></app-main-footer> -->
 </div>
-<app-main-footer></app-main-footer>

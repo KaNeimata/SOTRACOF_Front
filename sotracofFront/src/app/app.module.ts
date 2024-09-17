@@ -23,6 +23,11 @@ import { ModelFactureComponent } from './pages/model-facture/model-facture.compo
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProfileComponent } from './shared/account/profile/profile.component';
 import { NgPrimeModule } from './ng-prime.module';
+import { DivisionFiscaleComponent } from './pages/division-fiscale/division-fiscale.component';
+import { SocieteComponent } from './pages/societe/societe.component';
+import { RegimeFiscaleComponent } from './pages/regime-fiscale/regime-fiscale.component';
+import { CompteComponent } from './pages/compte/compte.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -41,7 +46,11 @@ import { NgPrimeModule } from './ng-prime.module';
     IntitulesComponent,
     ModelFactureComponent,
     DashboardComponent,
-    ProfileComponent
+    ProfileComponent,
+    DivisionFiscaleComponent,
+    SocieteComponent,
+    RegimeFiscaleComponent,
+    CompteComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +61,7 @@ import { NgPrimeModule } from './ng-prime.module';
     CheckboxModule,
     NgPrimeModule
   ],
-  providers: [],
+  providers: [MessageService, ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

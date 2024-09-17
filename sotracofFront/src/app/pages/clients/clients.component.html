@@ -1,7 +1,7 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
 <div class="wrapper">
-    
+
 
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -24,43 +24,45 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <button type="button" class="btn btn-secondary">Ajouter</button>
+                                <button type="button" pButton icon="pi pi-plus" class="btn btn-secondary"
+                                    (click)="ajouterClient()">Ajouter</button>
 
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <table  class="table table-bordered table-striped">
-                                    
+                                <table class="table table-bordered table-striped">
+
                                     <thead>
                                         <tr>
                                             <th>Nom</th>
                                             <th>Adresse</th>
                                             <th>Telephone</th>
-                                            <th>Action</th>
+                                            <th style="text-align: center;">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- <tr *ngfor="let i of clients">
+                                        <tr *ngFor="let i of clients">
                                             <td>{{ i.nom }}</td>
                                             <td>{{ i.adresse }}</td>
                                             <td>{{ i.tel }}</td>
-                                            <td>
-                                            <div class="btn-group">
-                                                <button type="button" routerLink="/update/" class="btn btn-primary">D</button>
-                                                <button type="button" class="btn btn-secondary">M</button>
-                                                <button type="button" class="btn btn-danger">S</button>
-                                            </div>
+                                            <td style="text-align: center;">
+                                                <button type="button" class="btn btn-primary btn-sm me-2"
+                                                    (click)="editClient(i)" style="margin-right: 10px;">
+                                                    <i class="pi pi-pencil"></i> Modifier
+                                                </button>
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                    (click)="deleteClient(i.id)">
+                                                    <i class="pi pi-trash"></i> Supprimer
+                                                </button>
                                             </td>
-                                        </tr> -->
-                                        </tbody>
+                                        </tr>
+                                    </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>Nom</th>
                                             <th>Adresse</th>
                                             <th>Telephone</th>
-                                            <th>Action</th>
-                                            <!-- <th>Engine version</th>
-                                            <th>CSS grade</th> -->
+                                            <th style="text-align: center;">Actions</th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -68,6 +70,90 @@
                             <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
+                        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [responsive]="true"
+                            [baseZIndex]="10000" [style]="{'width': '600px'}"
+                            [contentStyle]="{ 'backdrop-filter': 'blur(10px)' }">
+                            <div class="card">
+                                <div class="card-header">
+                                    {{ editMode ? 'Modifier ce client' : 'Ajouter un client' }}
+                                </div>
+                                <div class="card-body">
+                                    <form [formGroup]="cltForm" (ngSubmit)="addClient()">
+                                        <div class="p-fluid p-formgrid p-grid justify-content-center">
+                                            <div class="row">
+                                                <div class="p-field p-col-6" style="padding: 5px;">
+                                                    <div class="mb-3">
+                                                        <label for="nom" class="mb-2">Nom</label>
+                                                        <input id="nom" type="text" class="form-control mb-2" formControlName="nom" />
+                                                        <div *ngIf="f['nom'].invalid && f['nom'].touched" class="text-danger">
+                                                            <small *ngIf="f['nom'].errors?.['required']">Le nom est
+                                                                requis.</small>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="adresse" class="mb-2">Adresse</label>
+                                                        <input id="adresse" type="text" class="form-control mb-2" formControlName="adresse" />
+                                                        <div *ngIf="f['adresse'].invalid && f['adresse'].touched" class="text-danger">
+                                                            <small *ngIf="f['adresse'].errors?.['required']">L'/ adresse est
+                                                                requise.</small>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="iffu" class="mb-2">Numero IFFU</label>
+                                                        <input id="iffu" type="text" class="form-control mb-2" formControlName="iffu" />
+                                                        <div *ngIf="f['iffu'].invalid && f['iffu'].touched" class="text-danger">
+                                                            <small *ngIf="f['iffu'].errors?.['required']">Le numero iffu est
+                                                                requis.</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            
+                                                <div class="p-field p-col-6" style="padding: 5px;">
+                                                    <div class="mb-3">
+                                                        <label for="boitePostal" class="mb-2">Boite Postal</label>
+                                                        <input id="boitePostal" type="text" class="form-control mb-2" formControlName="boitePostal" />
+                                                        <div *ngIf="f['boitePostal'].invalid && f['boitePostal'].touched" class="text-danger">
+                                                            <small *ngIf="f['boitePostal'].errors?.['required']">La boite
+                                                                Postale est requise.</small>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="mb-3">
+                                                        <label for="tel" class="mb-2">Tel</label>
+                                                        <input id="tel" type="text" class="form-control mb-2" formControlName="tel" />
+                                                        <div *ngIf="f['tel'].invalid && f['tel'].touched" class="text-danger">
+                                                            <small *ngIf="f['tel'].errors?.['required']">Le telephone est
+                                                                requis.</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="rccm" class="mb-2">Numero rccm</label>
+                                                        <input id="rccm" type="text" class="form-control mb-2" formControlName="rccm" />
+                                                        <div *ngIf="f['rccm'].invalid && f['rccm'].touched" class="text-danger">
+                                                            <small *ngIf="f['rccm'].errors?.['required']">Le rccm est
+                                                                requis.</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end mt-4">
+                                            <button type="button" class="btn btn-secondary ms-sm-4"
+                                                style="margin-right: 20px;" (click)="cancel()">Annuler</button>
+                                            <button type="submit" class="btn btn-primary"
+                                                [disabled]="cltForm.invalid">{{
+                                                editMode ?
+                                                'Mettre à jour' : 'Ajouter' }}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </p-dialog>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -77,6 +163,5 @@
         </section>
         <!-- /.content -->
     </div>
-<app-main-footer></app-main-footer>
+    <app-main-footer></app-main-footer>
 </div>
-

@@ -1,15 +1,11 @@
 export interface Client{
-    id?: Number;
-    nom?: String;
-    rccm?: String;
-    iffu?: String;
-    adresse?: String;
-    boitePostal?: String;
-    tel?: String;
-    ligneFactureList?: LigneFacture[];
-    reglementList?: Reglement[];
-    compteList?: Compte[];
-    factureList?: Facture[];
+    id?: number;
+    nom?: string;
+    rccm?: string;
+    iffu?: string;
+    adresse?: string;
+    boitePostal?: string;
+    tel?: string;
 
 }
 export interface LigneFacture{
@@ -25,8 +21,19 @@ export interface Facture{
     
 }
 export interface TypePrestation{
-    id?: Number;
-    nom?: String;
+    id?: number;
+    nom?: string;
     // factureList?: Facture[];
     // ligneFactureList?: LigneFacture[];
+}
+export interface Signataire{
+    id?: number;
+    nom?: string;
+    titre?: string;
+    description?: string
+}
+export interface DivisionFiscale{
+    id?:Number;
+    nom?: string;
+    sigle?: string
 }

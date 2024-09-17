@@ -29,6 +29,7 @@ export class ClientsComponent implements OnInit{
         res => {
           if (res.body) {
             this.clients = res.body;
+            console.log('Success: donnee charger', this.clients);
           }
         }
     )
@@ -41,10 +42,7 @@ export class ClientsComponent implements OnInit{
       adresse: ['', [Validators.required, Validators.minLength(3)]],
       boitePostal: ['', [Validators.required, Validators.minLength(3)]],
       tel: ['', [Validators.required, Validators.minLength(3)]],
-      ligneFactureList: ['', [Validators.required, Validators.minLength(3)]],
-      reglementList: ['', [Validators.required, Validators.minLength(3)]],
-      compteList: ['', [Validators.required, Validators.minLength(3)]],
-      factureList: ['', [Validators.required, Validators.minLength(3)]],
+      rccm: ['', [Validators.required, Validators.minLength(3)]]
     });
   }
 
@@ -55,47 +53,64 @@ export class ClientsComponent implements OnInit{
   }
 
   editClient(client: Client): void {
-    this.cltForm.patchValue(client);
-    this.editMode = true;
-    this.displayDialog = true;
-    this.selectedClient = client;
-  }
-  addClient(clt: Client) {
-    if (this.cltForm.valid) {
-      const clt = this.cltForm.value;
-        if (this.editMode) {
-      if (clt.id != null){
-      this.appService.updateClient(clt.id, clt).subscribe(
+  // Patcher le formulaire avec les données du client sélectionné
+  this.cltForm.patchValue(client);
+  
+  // Si le client a un ID, nous sommes en mode modification
+  this.editMode = !!client.id;
+  
+  // Afficher le dialogue
+  this.displayDialog = true;
+  
+  // Stocker le client sélectionné
+  this.selectedClient = client;
+}
+
+addClient() {
+  if (this.cltForm.valid) {
+    const clt = this.cltForm.value;
+    if (this.editMode || clt.id != null) {
+      this.appService.updateClient(clt.id).subscribe(
         (res) => {
-          console.log('Client MAJ reussie')
+          console.log('Client mis à jour avec succès');
+          this.listClients();
         }
-        
-      )
-    }
-    }
-       else {
-      this.appService.createClient(this.selectedClient).subscribe(
-      (res) => {
-         if (res.body) {
-          console.log('Client créé avec succès', res.body);
-      } else {
-          console.log('Aucune donnée renvoyée dans la réponse');
-      }
+      );
+    } else {
+      this.appService.createClient(clt).subscribe(
+        (res) => {
+          if (res.body) {
+            console.log('Client créé avec succès', res.body);
+            this.listClients();
+          } else {
+            console.log('Aucune donnée renvoyée dans la réponse');
+          }
         }
-    );
+      );
     }
-    }
+    this.displayDialog = false;
+  } else {
+    this.cltForm.markAllAsTouched();
   }
+}
+
 
   deleteClient(clientId: number) {
     this.appService.deleteClient(clientId).subscribe(
-      (Response) => {
+      () => {
+        this.listClients()
         console.log('suppression reussie');
-      },
-      (Error) => {
-        console.error('echec', Error);
       }
     );
+  }
+
+  
+  cancel(): void {
+    this.displayDialog = false;
+  }
+
+  get f() {
+    return this.cltForm.controls;
   }
 }
 
