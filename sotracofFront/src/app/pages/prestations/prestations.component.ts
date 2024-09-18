@@ -68,7 +68,7 @@ export class PrestationsComponent implements OnInit {
       this.displayDialog = false;
     } else {
       this.prestationForm.markAllAsTouched();
-    }
+     }
   }
 
   deletePrestation(id: number): void {

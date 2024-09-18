@@ -12,7 +12,7 @@ export class AppServices {
     constructor(protected http: HttpClient) {
     }
     // ===============================service Client ==========================
-    
+
     getClients(): Observable<HttpResponse<any[]>> {
     return this.http.get<any[]>(`${AppEndpoint.CLIENT_URL}`, {observe: 'response'});
     }
@@ -24,21 +24,22 @@ export class AppServices {
     createClient(client: Client): Observable<HttpResponse<Client>> {
         return this.http.post<Client>(`${AppEndpoint.CLIENT_URL}`, client, { observe: 'response' });
     }
-    
-    
     updateClient(client: Client): Observable<HttpResponse<Client>> {
     return this.http.put<Client>(`${AppEndpoint.CLIENT_URL}`, client, { observe: 'response' });
     }
     
     deleteClient(id: number): Observable<HttpResponse<Client>> {
     return this.http.delete(`${AppEndpoint.CLIENT_URL}/${id}`, { observe: 'response' });
+
   }
 
 
   // ===============================service prestation ==========================
-    
+
     getAllPrestation(): Observable<HttpResponse<any[]>> {
+
     return this.http.get<TypePrestation[]>(`${AppEndpoint.TYPE_PRESTATION_URL}`, {observe: 'response'});
+
     }
 
     getPrestationById(id: Number): Observable<HttpResponse<Client>> {

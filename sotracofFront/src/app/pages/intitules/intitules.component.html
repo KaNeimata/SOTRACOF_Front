@@ -1,4 +1,86 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
-<app-main-content-wrapper></app-main-content-wrapper>
+<div class="content-wrapper">
+  <div class="flex-contener">
+    <div class="card">
+      <span class="text">CHAMPS TYPE DATE</span>
+      <button class="custom-button" (click)="openPopup()">Ajouter</button>
+        <ul *ngFor="let vir of champsDateArray">
+          <li >{{vir.nom}}<button class="btn"(click)="deleteChampDate(vir)">Supprimer</button></li>
+        </ul>
+    </div>
+    <div class="card">
+      <span class="text">CHAMPS TYPE DOUBLE</span>
+      <button class="custom-button" (click)="openPopupD()">Ajouter</button>
+        <ul *ngFor="let vir of champsDoubleArray">
+          <li>{{vir.nom}}<button class="btn" (click)="deleteChampDouble(vir)">Supprimer</button></li>
+        </ul>
+    </div>
+    <div class="card">
+      <span class="text"> TYPE STRING</span>
+      <button class="custom-button" (click)="openPopupS()">Ajouter</button>
+        <ul *ngFor="let vir of champsStringArray">
+          <li>{{vir.nom}}<button class="btn" (click)="deleteChampString(vir)">Supprimer</button></li>
+        </ul>
+    </div>
+  </div>
+
+
+<!-- Pop-up form -->
+<div class="popup" *ngIf="isPopupOpen">
+  <div class="popup-content">
+    <h2>Ajout Champs</h2>
+    <form (ngSubmit)="submitForm()" #popupForm="ngForm">
+      <label for="name">Nom:</label>
+      <input type="text" id="name" name="name" [(ngModel)]="champsDate.nom" required>
+
+      <!-- <label for="email">Email:</label>
+      <input type="email" id="email" name="email" [(ngModel)]="formData.email" required> -->
+
+      <div class="popup-actions">
+        <button type="button" (click)="closePopup()">Annuler</button>
+        <button type="submit" [disabled]="!popupForm.form.valid">Envoyer</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- double pop up -->
+<div class="popup" *ngIf="isPopupOpenD">
+  <div class="popup-content">
+    <h2>Ajout Champs</h2>
+    <form (ngSubmit)="submitFormD()" #popupForm="ngForm">
+      <label for="name">Nom:</label>
+      <input type="text" id="name" name="name" [(ngModel)]="champsDouble.nom" required>
+
+      <!-- <label for="email">Email:</label>
+      <input type="email" id="email" name="email" [(ngModel)]="formData.email" required> -->
+
+      <div class="popup-actions">
+        <button type="button" (click)="closePopupD()">Annuler</button>
+        <button type="submit" [disabled]="!popupForm.form.valid">Envoyer</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- String pop up -->
+<div class="popup" *ngIf="isPopupOpenS">
+  <div class="popup-content">
+    <h2>Ajout Champs</h2>
+    <form (ngSubmit)="submitFormS()" #popupForm="ngForm">
+      <label for="name">Nom:</label>
+      <input type="text" id="name" name="name" [(ngModel)]="champsString.nom" required>
+
+      <!-- <label for="email">Email:</label>
+      <input type="email" id="email" name="email" [(ngModel)]="formData.email" required> -->
+
+      <div class="popup-actions">
+        <button type="button" (click)="closePopupS()">Annuler</button>
+        <button type="submit" [disabled]="!popupForm.form.valid">Envoyer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</div>
 <app-main-footer></app-main-footer>

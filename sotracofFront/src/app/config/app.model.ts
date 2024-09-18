@@ -8,17 +8,33 @@ export interface Client{
     tel?: string;
 
 }
-export interface LigneFacture{
+export class LigneFacture{
+  id!:number;
+  champsListDate!:ChampsDate[];
+  champsListDouble!:ChampsDouble[];
+  champsListString!:ChampsString[];
+  regleCalcul!: RegleCalcul;
+  typePrestation!:TypePrestation;
+  client!:Client;
+  facture!:Facture;
 
 }
+
 export interface Reglement{
-    
+
 }
 export interface Compte{
-    
+
 }
 export interface Facture{
-    
+
+}
+export class RegleCalcul{
+  id!:number;
+  nom!:string;
+  FormeCalcule!:string;
+  ligneFacture!:LigneFacture;
+
 }
 export interface TypePrestation{
     id?: number;
@@ -36,4 +52,29 @@ export interface DivisionFiscale{
     id?:Number;
     nom?: string;
     sigle?: string
+}
+export class ChampsDate {
+  id!: number;
+  nom!:string;
+  valeur!:Date;
+  ligneFactureList!: LigneFacture[];
+
+  }
+  export class ChampsDouble {
+    id!: number;
+    nom!:string;
+    valeur!:number;
+    ligneFactureList!: LigneFacture[];
+
+    }
+    export class ChampsString {
+      id!: number;
+      nom!:string;
+      valeur!:string;
+      ligneFactureList!: LigneFacture[];
+
+      }
+export class ModelFacture{
+  id?: number;
+  
 }
