@@ -61,7 +61,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     CheckboxModule,
     NgPrimeModule
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService, IntitulesComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

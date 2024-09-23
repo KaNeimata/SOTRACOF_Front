@@ -13,6 +13,7 @@ export class ClientsComponent implements OnInit{
 
   clients: Array<Client> = [];
   selectedClient: Client;
+  // client: Client
   cltForm: FormGroup;
   displayDialog: boolean = false;
   editMode: boolean = false;
@@ -53,20 +54,13 @@ export class ClientsComponent implements OnInit{
   }
 
   editClient(client: Client): void {
-  // Patcher le formulaire avec les données du client sélectionné
   this.cltForm.patchValue(client);
-  
-  // Si le client a un ID, nous sommes en mode modification
   this.editMode = !!client.id;
-  
-  // Afficher le dialogue
   this.displayDialog = true;
-  
-  // Stocker le client sélectionné
   this.selectedClient = client;
 }
 
-addClient() {
+addClient(clt: Client) {
   if (this.cltForm.valid) {
     const clt = this.cltForm.value;
     if (this.editMode || clt.id != null) {

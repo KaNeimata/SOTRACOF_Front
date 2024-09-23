@@ -1,7 +1,7 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
 <div class="wrapper">
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="padding: 30px;">
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -11,7 +11,88 @@
                 </div>
             </div><!-- /.container-fluid -->
         </section>
-        
+        <!-- main content -->
+        <div class="card">
+
+            <div class="d-flex justify-content-end mb-4" style="padding-right: 20px;" class="card-body">
+                <button pButton icon="pi pi-plus" label="Ajouter" class="btn btn-primary"
+                    (click)="ajouter()">
+                </button>
+            </div>
+
+            <div style="padding: 20px;">
+                <p-table [value]="models" class="table table-striped" styleClass="p-datatable-gridlines"
+                    class="table small-column-width">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Nom</th>
+                            <th style="width: 200px; text-align: center;">Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-model>
+                        <tr>
+                            <td>{{ model.nom }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    <button pButton pRipple icon="pi pi-pencil" class="btn btn-primary btn-sm me-2" style="margin-right: 10px;"
+                                        (click)="onEdit(model)">
+                                        Modifier
+                                    </button>
+                                    <button pButton pRipple icon="pi pi-trash" class="btn btn-danger btn-sm me-2"
+                                        (click)="onDelete(model.id)">
+                                        Supprimer
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [responsive]="true" [baseZIndex]="10000"
+        [style]="{'width': '600px'}" [contentStyle]="{ 'backdrop-filter': 'blur(10px)' }">
+        <div class="card">
+            <div class="card-header">
+                {{ editMode ? 'Modifier ce model' : 'Ajouter un model' }}
+            </div>
+            <div class="card-body">
+                <form [formGroup]="modelForm" (ngSubmit)="onSubmit()">
+                    <div class="p-fluid p-formgrid p-grid justify-content-center">
+                        <div class="p-field p-col-6">
+                            <label for="nom" class="mb-2">Nom</label>
+                            <input id="nom" type="text" class="form-control mb-2" formControlName="nom" 
+                            [style]="{'width': '350px', 'height': '40px'}"/>
+                            <div *ngIf="f['nom'].invalid && f['nom'].touched" class="text-danger">
+                                <small *ngIf="f['nom'].errors?.['required']">Le nom est requis.</small>
+                            </div>
+                        </div>
+                        <div class="p-field p-col-6">
+                            <label for="champs" class="mb-2">Champs: </label>
+                            <p-multiSelect 
+                                [options]="listChamps" 
+                                formArrayName="champs" 
+                                optionLabel="nom" 
+                                display="chip" 
+                                [filter]="true"
+                                [style]="{'width': '350px', 'height': '40px'}"
+                                (onChange)="onFieldChange($event)">
+                                
+                            </p-multiSelect>
+                            
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4">
+                        <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;"
+                            (click)="cancel()">Annuler</button>
+                        <button type="submit"  class="btn btn-primary" [disabled]="modelForm.invalid">{{
+                            editMode ?
+                            'Mettre à jour' : 'Ajouter' }}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </p-dialog>
+
     </div>
 </div>
 <app-main-footer></app-main-footer>

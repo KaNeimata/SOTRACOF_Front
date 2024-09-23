@@ -1,7 +1,10 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Client, DivisionFiscale, Signataire, TypePrestation } from './app.model';
-import { Observable } from "rxjs";
+import {
+  ChampsDate, Client, DivisionFiscale, ModelFacture,
+  Signataire, TypePrestation, ChampsString, ChampsDouble
+} from './app.model';
+import { forkJoin, map, Observable } from "rxjs";
 import { AppEndpoint } from "./app.endpoint";
 
 @Injectable({
@@ -104,4 +107,54 @@ export class AppServices {
     deleteDivision(id: Number): Observable<HttpResponse<DivisionFiscale>> {
     return this.http.delete(`${AppEndpoint.DIVISION_FISCALE_URL}/${id}`, { observe: 'response' });
   }
+
+  // =================================== SERVICE MODEL FACTURES==================================================
+  getAllModelFacturesWithResponse(): Observable<HttpResponse<ModelFacture[]>> {
+    return this.http.get<ModelFacture[]>(`${AppEndpoint.MODEL_URL}`, { observe: 'response' });
+  }
+
+  getModelById(id: number): Observable<HttpResponse<ModelFacture>> {
+    return this.http.get<ModelFacture>(`${AppEndpoint.MODEL_URL}/${id}`, { observe: 'response' });
+  }
+
+  createModel(model: ModelFacture): Observable<HttpResponse<ModelFacture>> {
+    return this.http.post<ModelFacture>(`${AppEndpoint.MODEL_URL}`, model, { observe: 'response' });
+  }
+
+  updateModel(model: ModelFacture): Observable<HttpResponse<ModelFacture>> {
+    return this.http.put<ModelFacture>(`${AppEndpoint.MODEL_URL}`, model, { observe: 'response' });
+  }
+
+  deleteModel(id: number): Observable<HttpResponse<void>> {
+    return this.http.delete<void>(`${AppEndpoint.MODEL_URL}/${id}`, { observe: 'response' });
+  }
+
+// ============== service dobtention de une liste de tous types de  champs================
+  getAvailableFieldsDate(): Observable<ChampsDate[]> {
+    return this.http.get<ChampsDate[]>('http://localhost:8080/api/champs/date');
+
+  }
+  
+  getAvailableFieldsDouble(): Observable<ChampsDouble[]> {
+    return this.http.get<ChampsDouble[]>('http://localhost:8080/api/champs/double');
+
+  }
+  
+  getAvailableFieldsString(): Observable<ChampsString[]> {
+    return this.http.get<ChampsString[]>('http://localhost:8080/api/champs/string');
+
+  }
+  // Fonction de fusion 
+   getAllAvailableFields(): Observable<any[]> {
+    const dateFields$ = this.getAvailableFieldsDate();
+    const doubleFields$ = this.getAvailableFieldsDouble();
+    const stringFields$ = this.getAvailableFieldsString();
+
+    return forkJoin([dateFields$, doubleFields$, stringFields$]).pipe(
+      map(([dateFields, doubleFields, stringFields]) => {
+        return [...dateFields, ...doubleFields, ...stringFields];
+      })
+    );
+  }
+
 }

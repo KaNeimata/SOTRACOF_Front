@@ -62,8 +62,6 @@ export class SignatairesComponent implements OnInit {
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
       }
       else {
-        // this.signataire.id = this.createId();
-        // this.signataire.image = 'product-placeholder.svg';
         this.signataires.push(this.signataire);
         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
       }

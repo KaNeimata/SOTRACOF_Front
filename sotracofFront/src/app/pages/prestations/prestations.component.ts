@@ -49,10 +49,11 @@ export class PrestationsComponent implements OnInit {
   }
 
   editPrestation(prestation: TypePrestation): void {
+    this.prestationService.getPrestationById(prestation.id).subscribe(prestation => {
     this.prestationForm.patchValue(prestation);
     this.editMode = true;
     this.displayDialog = true;
-    // this.selectedPrestation = prestation;
+    })
   }
 
   savePrestation(): void {

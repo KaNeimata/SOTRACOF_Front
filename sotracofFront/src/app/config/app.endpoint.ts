@@ -6,7 +6,8 @@ export class AppEndpoint{
     static readonly FACTURE_URL = `${AppEndpoint.BASE_URL}/typePrestation`;
     static readonly DIVISION_FISCALE_URL = `${AppEndpoint.BASE_URL}/divFiscal`;
     static readonly SIGNATAIRE_URL = `${AppEndpoint.BASE_URL}/signataire`;
-    static readonly MODEL_URL = `${AppEndpoint.BASE_URL}/typePrestation`;
+    static readonly MODEL_URL = `${AppEndpoint.BASE_URL}/ligne`;
     static readonly REGLEMENT_URL = `${AppEndpoint.BASE_URL}/typePrestation`;
+
 
 }

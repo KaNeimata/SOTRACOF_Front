@@ -19,32 +19,31 @@ export class IntitulesComponent implements OnInit{
   constructor( private parametreService: ParametreService){}
   ngOnInit(): void {
 
- this.chargerListChampsDate();
- this.chargerListChampsDouble();
- this.chargerListChampsString();
+ this.chargerListChamps();
+//  this.chargerListChampsDouble();
+//  this.chargerListChampsString();
   }
 
 
 //chager listes des champs
-  chargerListChampsDate() {
+  chargerListChamps(): any {
     this.parametreService.listeChampsDate().subscribe((prods: any) => {
       this.champsDateArray = prods;
       console.log(this.champsDateArray);
      // this.searchArray=prods;
        });
-  }
 
-  chargerListChampsDouble() {
     this.parametreService.listeChampsDouble().subscribe((prods: any) => {
       this.champsDoubleArray = prods;
       // this.searchArray=prods;
-       });
-  }
-
-  chargerListChampsString() {
+      console.log(this.champsDoubleArray);
+    });
+    
+  // String
     this.parametreService.listeChampsString().subscribe((prods: any) => {
       this.champsStringArray = prods;
-        // this.searchArray=prods;
+      // this.searchArray=prods;
+      console.log(this.champsStringArray);
        });
   }
 
@@ -65,7 +64,7 @@ export class IntitulesComponent implements OnInit{
   submitForm() {
     // console.log('Formulaire soumis :', this.formData);
     this.parametreService.addChampsDate(this.champsDate).subscribe(vir=>{
-      this.chargerListChampsDate();
+      this.chargerListChamps();
 
     })
     this.closePopup();
@@ -73,7 +72,7 @@ export class IntitulesComponent implements OnInit{
 
   deleteChampDate(p:ChampsDate){
     this.parametreService.supprimerChampsDate(p.id).subscribe(()=>{
-      this.chargerListChampsDate();
+      this.chargerListChamps();
     });
 
   }
@@ -92,7 +91,7 @@ export class IntitulesComponent implements OnInit{
   submitFormD() {
     // console.log('Formulaire soumis :', this.formData);
     this.parametreService.addChampsDouble(this.champsDouble).subscribe(vir=>{
-      this.chargerListChampsDouble();
+      this.chargerListChamps();
 
     })
     this.closePopupD();
@@ -100,7 +99,7 @@ export class IntitulesComponent implements OnInit{
 
   deleteChampDouble(p:ChampsDouble){
     this.parametreService.supprimerChampsDouble(p.id).subscribe(()=>{
-      this.chargerListChampsDouble();
+      this.chargerListChamps();
     });
 
   }
@@ -120,14 +119,14 @@ export class IntitulesComponent implements OnInit{
   submitFormS() {
     // console.log('Formulaire soumis :', this.formData);
     this.parametreService.addChampsString(this.champsString).subscribe(vir=>{
-      this.chargerListChampsString();
+      this.chargerListChamps();
     })
     this.closePopupS();
   }
 
   deleteChampString(p:ChampsString){
     this.parametreService.supprimerChampsString(p.id).subscribe(()=>{
-      this.chargerListChampsString();
+      this.chargerListChamps();
     });
 
   }

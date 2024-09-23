@@ -78,7 +78,7 @@
                                     {{ editMode ? 'Modifier ce client' : 'Ajouter un client' }}
                                 </div>
                                 <div class="card-body">
-                                    <form [formGroup]="cltForm" (ngSubmit)="addClient()">
+                                    <form [formGroup]="cltForm" (ngSubmit)="addClient(selectedClient)">
                                         <div class="p-fluid p-formgrid p-grid justify-content-center">
                                             <div class="row">
                                                 <div class="p-field p-col-6" style="padding: 5px;">

@@ -8,17 +8,17 @@ export interface Client{
     tel?: string;
 
 }
-export class LigneFacture{
-  id!:number;
-  champsListDate!:ChampsDate[];
-  champsListDouble!:ChampsDouble[];
-  champsListString!:ChampsString[];
-  regleCalcul!: RegleCalcul;
-  typePrestation!:TypePrestation;
-  client!:Client;
-  facture!:Facture;
+// export class LigneFacture{
+//   id!:number;
+//   champsListDate!:ChampsDate[];
+//   champsListDouble!:ChampsDouble[];
+//   champsListString!:ChampsString[];
+//   regleCalcul!: RegleCalcul;
+//   typePrestation!:TypePrestation;
+//   client!:Client;
+//   facture!:Facture;
 
-}
+// }
 
 export interface Reglement{
 
@@ -33,7 +33,7 @@ export class RegleCalcul{
   id!:number;
   nom!:string;
   FormeCalcule!:string;
-  ligneFacture!:LigneFacture;
+  ligneFacture!: ModelFacture [];
 
 }
 export interface TypePrestation{
@@ -57,24 +57,29 @@ export class ChampsDate {
   id!: number;
   nom!:string;
   valeur!:Date;
-  ligneFactureList!: LigneFacture[];
+  ligneFactureList!: ModelFacture[];
+  
 
   }
   export class ChampsDouble {
     id!: number;
     nom!:string;
     valeur!:number;
-    ligneFactureList!: LigneFacture[];
+    ligneFactureList!: ModelFacture[];
 
     }
     export class ChampsString {
       id!: number;
       nom!:string;
       valeur!:string;
-      ligneFactureList!: LigneFacture[];
+      ligneFactureList!: ModelFacture[];
 
       }
-export class ModelFacture{
+export interface ModelFacture{
   id?: number;
+  nom?: string;
+  champsListDate?: ChampsDate[];
+  champsListDouble?: ChampsDouble[];
+  champsListString?: ChampsString[];
   
 }
