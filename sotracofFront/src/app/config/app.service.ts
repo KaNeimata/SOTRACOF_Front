@@ -2,7 +2,8 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import {
   ChampsDate, Client, DivisionFiscale, ModelFacture,
-  Signataire, TypePrestation, ChampsString, ChampsDouble
+  Signataire, TypePrestation, ChampsString, ChampsDouble,
+  Champs
 } from './app.model';
 import { forkJoin, map, Observable } from "rxjs";
 import { AppEndpoint } from "./app.endpoint";
@@ -51,9 +52,8 @@ export class AppServices {
 
     createTPrestation(prestation: TypePrestation): Observable<HttpResponse<TypePrestation>> {
         return this.http.post<TypePrestation>(`${AppEndpoint.TYPE_PRESTATION_URL}`, prestation, { observe: 'response' });
-    }
-    
-    
+  }
+  
     updateTPrestation(prestation: TypePrestation): Observable<HttpResponse<TypePrestation>> {
     return this.http.put<TypePrestation>(`${AppEndpoint.TYPE_PRESTATION_URL}`, prestation, { observe: 'response' });
     }
@@ -129,19 +129,28 @@ export class AppServices {
     return this.http.delete<void>(`${AppEndpoint.MODEL_URL}/${id}`, { observe: 'response' });
   }
 
-// ============== service dobtention de une liste de tous types de  champs================
+     // =========== service dobtention de une liste de tous types de  champs==========
   getAvailableFieldsDate(): Observable<ChampsDate[]> {
-    return this.http.get<ChampsDate[]>('http://localhost:8080/api/champs/date');
+    return this.http.get<ChampsDate[]>('http://localhost:8080/api/champs/date').pipe(
+    map(fields => fields.map(field => ({ ...field, type: 'ChampsDate' })))
+  );
+;
 
   }
   
   getAvailableFieldsDouble(): Observable<ChampsDouble[]> {
-    return this.http.get<ChampsDouble[]>('http://localhost:8080/api/champs/double');
+    return this.http.get<ChampsDouble[]>('http://localhost:8080/api/champs/double').pipe(
+    map(fields => fields.map(field => ({ ...field, type: 'ChampsDouble' })))
+  );
+;
 
   }
   
   getAvailableFieldsString(): Observable<ChampsString[]> {
-    return this.http.get<ChampsString[]>('http://localhost:8080/api/champs/string');
+    return this.http.get<ChampsString[]>('http://localhost:8080/api/champs/string').pipe(
+    map(fields => fields.map(field => ({ ...field, type: 'ChampsString' })))
+  );
+;
 
   }
   // Fonction de fusion 
@@ -155,6 +164,57 @@ export class AppServices {
         return [...dateFields, ...doubleFields, ...stringFields];
       })
     );
+  }
+
+  // recuperation de clients
+  getAllClient(): Observable<Client[]> {
+    return this.http.get<Client[]>(`${AppEndpoint.CLIENT_URL}`);
+
+  }
+
+   // Récupérer tous les modèles de factures avec interface champs general
+  getAllModelFactures(): Observable<HttpResponse<ModelFacture[]>> {
+    return this.http.get<ModelFacture[]>(`${AppEndpoint.MODEL_FACTURE_URL}`, { observe: 'response' });
+  }
+
+  // Récupérer un modèle de facture par ID
+  getModelFactureById(id: number): Observable<HttpResponse<ModelFacture>> {
+    return this.http.get<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}/${id}`, { observe: 'response' });
+  }
+
+  // Créer un nouveau modèle de facture
+  createModelFacture(dto: ModelFacture): Observable<HttpResponse<ModelFacture>> {
+    return this.http.post<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}`, dto, { observe: 'response' });
+  }
+
+  // Mettre à jour un modèle de facture existant
+  updateModelFacture(dto: ModelFacture): Observable<HttpResponse<ModelFacture>> {
+    return this.http.put<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}`, dto, { observe: 'response' });
+  }
+
+  // Supprimer un modèle de facture
+  deleteModelFacture(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete(`${AppEndpoint.MODEL_FACTURE_URL}/${id}`, { observe: 'response' });
+  }
+// ============================================ service champs =========================
+   getAllChamps(): Observable<Champs[]> {
+    return this.http.get<Champs[]>(`${AppEndpoint.CHAMPS_URL}`);
+
+  }
+  getChampsById(id: number): Observable<HttpResponse<Champs>> {
+    return this.http.get<Champs>(`${AppEndpoint.CHAMPS_URL}/${id}`, { observe: 'response' });
+  }
+
+  createChamps(dto: Champs): Observable<HttpResponse<Champs>> {
+    return this.http.post<Champs>(`${AppEndpoint.CHAMPS_URL}`, dto, { observe: 'response' });
+  }
+
+  updateChamps(dto: Champs): Observable<HttpResponse<Champs>> {
+    return this.http.put<Champs>(`${AppEndpoint.CHAMPS_URL}${dto.id}`, dto, { observe: 'response' });
+  }
+
+  deleteChamps(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete(`${AppEndpoint.CHAMPS_URL}/${id}`, { observe: 'response' });
   }
 
 }

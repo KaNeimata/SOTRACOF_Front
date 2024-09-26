@@ -1,42 +1,103 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
-<div class="content-wrapper">
-  <div class="flex-contener">
-    <div class="card">
-      <span class="text">CHAMPS TYPE DATE</span>
-      <button class="custom-button" (click)="openPopup()">Ajouter</button>
-        <ul *ngFor="let vir of champsDateArray">
-          <li >{{vir.nom}}<button class="btn"(click)="deleteChampDate(vir)">Supprimer</button></li>
-        </ul>
+<!-- messages -->
+<p-toast></p-toast>
+<div class="wrapper">
+  <div class="content-wrapper" style="padding: 30px;">
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Listes des intitules</h1>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container d-flex justify-content-center">
+      <div class="card" style="width: 50%;">
+        <div class="card-header d-flex justify-content-center">
+          <h3><strong>Faire un enregistrement d'intitules</strong></h3>
+        </div>
+        <div style="padding: 20px;" class="card-body">
+          <form [formGroup]="champsForm">
+            <div class="p-fluid p-formgrid p-grid justify-content-center">
+              <div class="p-field p-col-6">
+                <label for="nom" class="mb-2">Nom du Champ</label>
+                <input id="nom" type="text" class="form-control mb-2" formControlName="nom"
+                  [style]="{'width': '350px', 'height': '40px'}" />
+                <div>
+                  <small *ngIf="champsForm.get('nom')?.invalid && champsForm.get('nom')?.touched" class="p-error">
+                    Le nom du champ est requis.
+                  </small>
+                </div>
+              </div>
+      
+              <div class="p-field p-col-6">
+                <label for="type" class="mb-2">Type de Champ</label>
+                <p-dropdown id="type" [options]="typeOptions" optionValue="value" formControlName="type" optionLabel="label"
+                  [style]="{'width': '350px', 'height': '40px'}" placeholder="Sélectionner un type">
+                </p-dropdown>
+                <small *ngIf="champsForm.get('type')?.invalid && champsForm.get('type')?.touched" class="p-error">
+                  Le type du champ est requis.
+                </small>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer d-flex justify-content-end">
+          <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;"
+            (click)="resetForm()">Annuler</button>
+          <button pButton icon="pi pi-save" class="btn btn-primary" type="submit" label=" Enregistrer"
+            (click)="onSubmit()" [disabled]="champsForm.invalid"></button>
+        </div>
+      </div>
     </div>
+
     <div class="card">
-      <span class="text">CHAMPS TYPE DOUBLE</span>
-      <button class="custom-button" (click)="openPopupD()">Ajouter</button>
-        <ul *ngFor="let vir of champsDoubleArray">
-          <li>{{vir.nom}}<button class="btn" (click)="deleteChampDouble(vir)">Supprimer</button></li>
-        </ul>
+      <div class="card-header d-flex justify-content-center">
+        <h3><strong>Liste des Champs</strong></h3>
+      </div>
+      <div style="padding: 20px;">
+        <p-table [value]="champsList" class="table table-striped" styleClass="p-datatable-gridlines"
+          class="table small-column-width">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Nom</th>
+              <th style="width: 250px; text-align: center;">Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-champ>
+            <tr>
+              <td>{{ champ.nom }}</td>
+              <td>
+                <div class="d-flex">
+                  <button pButton pRipple icon="pi pi-pencil" class="bn btn-primary btn-sm me-2" style="margin-right: 10px;"
+                    (click)="editChamps(champ)">
+                     Modifier
+                  </button>
+                  <button pButton pRipple icon="pi pi-trash" class="btn btn-danger btn-sm me-2"
+                    (click)="deleteChamps(champ.id)">
+                     Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      
     </div>
-    <div class="card">
-      <span class="text"> TYPE STRING</span>
-      <button class="custom-button" (click)="openPopupS()">Ajouter</button>
-        <ul *ngFor="let vir of champsStringArray">
-          <li>{{vir.nom}}<button class="btn" (click)="deleteChampString(vir)">Supprimer</button></li>
-        </ul>
-    </div>
-  </div>
 
 
-<!-- Pop-up form -->
-<div class="popup" *ngIf="isPopupOpen">
+
+
+    <!-- <div class="popup" *ngIf="isPopupOpen">
   <div class="popup-content">
     <h2>Ajout Champs</h2>
     <form (ngSubmit)="submitForm()" #popupForm="ngForm">
       <label for="name">Nom:</label>
       <input type="text" id="name" name="name" [(ngModel)]="champsDate.nom" required>
-
-      <!-- <label for="email">Email:</label>
-      <input type="email" id="email" name="email" [(ngModel)]="formData.email" required> -->
-
       <div class="popup-actions">
         <button type="button" (click)="closePopup()">Annuler</button>
         <button type="submit" [disabled]="!popupForm.form.valid">Envoyer</button>
@@ -44,17 +105,12 @@
     </form>
   </div>
 </div>
-<!-- double pop up -->
 <div class="popup" *ngIf="isPopupOpenD">
   <div class="popup-content">
     <h2>Ajout Champs</h2>
     <form (ngSubmit)="submitFormD()" #popupForm="ngForm">
       <label for="name">Nom:</label>
       <input type="text" id="name" name="name" [(ngModel)]="champsDouble.nom" required>
-
-      <!-- <label for="email">Email:</label>
-      <input type="email" id="email" name="email" [(ngModel)]="formData.email" required> -->
-
       <div class="popup-actions">
         <button type="button" (click)="closePopupD()">Annuler</button>
         <button type="submit" [disabled]="!popupForm.form.valid">Envoyer</button>
@@ -62,7 +118,6 @@
     </form>
   </div>
 </div>
-<!-- String pop up -->
 <div class="popup" *ngIf="isPopupOpenS">
   <div class="popup-content">
     <h2>Ajout Champs</h2>
@@ -70,17 +125,14 @@
       <label for="name">Nom:</label>
       <input type="text" id="name" name="name" [(ngModel)]="champsString.nom" required>
 
-      <!-- <label for="email">Email:</label>
-      <input type="email" id="email" name="email" [(ngModel)]="formData.email" required> -->
-
       <div class="popup-actions">
         <button type="button" (click)="closePopupS()">Annuler</button>
         <button type="submit" [disabled]="!popupForm.form.valid">Envoyer</button>
       </div>
     </form>
   </div>
-</div>
+</div> -->
 
 
-</div>
-<app-main-footer></app-main-footer>
+  </div>
+  <app-main-footer></app-main-footer>

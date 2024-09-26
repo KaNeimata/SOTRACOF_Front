@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { IntitulesComponent } from '../intitules/intitules.component';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ChampsDate, ModelFacture, ChampsDouble, ChampsString } from 'src/app/config/app.model';
+import { ChampsDate, ModelFacture, Champs } from 'src/app/config/app.model';
 import { AppServices } from 'src/app/config/app.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-model-facture',
@@ -11,113 +12,134 @@ import { AppServices } from 'src/app/config/app.service';
 })
 export class ModelFactureComponent implements OnInit {
 
-  modelForm: FormGroup;
-  listChamps: ChampsDate[] = [];
-  models: ModelFacture[] = [];
-  selectedChamps: ChampsDate[] = [];
+  modelFactureForm: FormGroup;
+  champsDisponibles: Champs[] = [];   //champs dispo
+  modelFactures: ModelFacture[] = [];  // Liste des modèles
+  selectedModelFacture: ModelFacture | null = null;  // Modèle sélectionné pour modification
   displayDialog: boolean = false;
-  editMode: boolean = false;
+  isEditing: boolean = false;
+  displayAddDialog: boolean = false; 
+  displayEditDialog: boolean = false;
 
   constructor(
     private fb: FormBuilder,
-    private modelFactureService: AppServices
-  )
-
-  {
-    this.modelForm = this.fb.group({
-      nom: ['', [Validators.required, Validators.minLength(3)]],
-      champs: this.fb.array([], [Validators.required])
-
+    private modelFactureService: AppServices,
+    private messageService: MessageService
+  ) {
+    this.modelFactureForm = this.fb.group({
+      nom: ['', Validators.required],  // Nom du modèle de facture
+      champs: [[], Validators.required]  // Champs associés au modèle
     });
   }
 
   ngOnInit(): void {
-    this.loadlistChamps();
-    this.loadModels();
-    
+    this.loadChamps();  // Charger les champs disponibles
+    this.loadModelFactures();  // Charger les modèles de facture existants
   }
 
-  onEdit(model: ModelFacture): void {
-      // this.modelFactureService.getModelById(model.id).subscribe(model => {
-      this.modelForm.patchValue(model);
-      this.editMode = true;
-      this.displayDialog = true;
-    // });
-  }
-  ajouter(): void {
-    this.modelForm.reset();
-    this.editMode = false;
-    this.displayDialog = true;
-  }
-  get champs(): FormArray {
-    return this.modelForm.get('champs') as FormArray;
-  }
-
-  loadlistChamps(): void {
-    this.modelFactureService.getAllAvailableFields().subscribe(fields => {
-      this.listChamps = fields;
-      console.log(this.listChamps);
-    });
-
-  }
-
-  loadModels(): void {
-    this.modelFactureService.getAllModelFacturesWithResponse().subscribe(response => {
-      this.models = response.body || [];
-      console.log(this.models);
-    });
-  }
-  onFieldChange(event: any): void {
-  const formArray: FormArray = this.modelForm.get('champs') as FormArray;
-
-    formArray.clear();
-    event.value.forEach((field: any) => {
-      formArray.push(this.fb.control(field));
+  // Charger les champs disponibles pour le modèle
+  loadChamps() {
+    this.modelFactureService.getAllChamps().subscribe((champs: Champs[]) => {
+      this.champsDisponibles = champs;
     });
   }
 
-  onSubmit(): void {
-    if (this.modelForm.valid) {
-      const modelFactureData = {
-        nom: this.modelForm.value.nom,
-        champs: this.modelForm.value.champs.map((champId: number) => {
-          return { id: champId };
-        })
-      };
-      console.log(modelFactureData);
-      this.modelFactureService.createModel(modelFactureData).subscribe(() => {
-        this.loadModels();
-        // this.modelForm.reset();
-        this.displayDialog = false;
-      });
+  // Charger les modèles de facture existants
+  loadModelFactures() {
+    this.modelFactureService.getAllModelFactures().subscribe((modelsFact) => {
+      this.modelFactures = modelsFact.body || [];
+      console.log('Success: donnee charger', this.modelFactures);
+    });
+  }
+// pop up to add
+  openAddDialog() {
+    this.isEditing = false;
+    this.modelFactureForm.reset();  // Réinitialiser le formulaire
+    this.displayDialog = true; // Ouvrir le dialogue
+  }
+  // edit
+  openEditDialog(model: ModelFacture) {
+    this.isEditing = true;
+    this.selectedModelFacture = model;
+    this.modelFactureForm.patchValue(model);  // Remplir le formulaire
+    this.displayDialog = true; // Ouvrir le dialogue
+  }
+  // Créer ou mettre à jour un modèle de facture
+  onSubmit() {
+    if (this.modelFactureForm.valid) {
+      const modelData = this.modelFactureForm.value;
+
+      console.log('Données envoyées au backend:', modelData); 
+
+    if (modelData.champs.length === 0) {
+      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Veuillez sélectionner au moins un champ' });
+      return;
+    }
+
+    if (this.selectedModelFacture) {
+      // Mise à jour d'un modèle existant
+      this.modelFactureService.updateModelFacture(modelData).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle mis à jour avec succès' });
+          this.loadModelFactures();
+          this.cancelEdit();  // Fermer le dialog après la mise à jour
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du modèle' });
+        }
+      );
+    }
+
+      else {
+        // Créer un nouveau modèle
+        this.modelFactureService.createModelFacture(modelData).subscribe(
+          (response) => {
+            this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle créé avec succès' });
+            this.loadModelFactures();
+            this.cancelEdit();
+          },
+          (error) => {
+            this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la création du modèle' });
+          }
+        );
+      }
     }
   }
-  onUpdate(model: ModelFacture): void {
-    if (this.modelForm.valid) {
-      const modelFactureData = {
-      nom: this.modelForm.value.nom,
-      champs: this.modelForm.value.champs.map((champId: number) => {
-        return { id: champId };
-      })
-    };
-      this.modelFactureService.updateModel(modelFactureData).subscribe(() => {
-        this.loadModels();
-        this.modelForm.reset();
-      });
-    }
+
+  cancelAdd(): void {
+  this.displayAddDialog = false;
+  this.modelFactureForm.reset();
+}
+  cancelEdit(): void {
+  this.displayEditDialog = false;
+  this.modelFactureForm.reset();
+}
+
+
+  // Sélectionner un modèle pour modification
+  editModelFacture(model: ModelFacture) {
+    this.selectedModelFacture = model;
+    this.modelFactureForm.patchValue(model);  // Remplir le formulaire avec les données du modèle sélectionné
   }
 
-  onDelete(id: number): void {
-    this.modelFactureService.deleteModel(id).subscribe(() => {
-      this.loadModels();
-    });
+  // Supprimer un modèle de facture
+  deleteModelFacture(id: number) {
+    this.modelFactureService.deleteModelFacture(id).subscribe(
+      (response) => {
+        this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle supprimé avec succès' });
+        this.loadModelFactures();
+      },
+      (error) => {
+        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la suppression du modèle' });
+      }
+    );
   }
 
-  cancel(): void {
-    this.displayDialog = false;
-  }
-  get f() {
-    return this.modelForm.controls;
-  }
+  // Réinitialiser le formulaire
+  resetForm() {
+    // this.selectedModelFacture = null;
+    this.modelFactureForm.reset();
+    this.displayDialog = false; // Fermer le dialogue
 
+  }
 }

@@ -36,7 +36,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a [routerLink]="['/accueil']" routerLinkActive="router-link-active"  class="nav-link">
+                    <a [routerLink]="['/accueil']" routerLinkActive="active"  class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             Dashboard
@@ -44,7 +44,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a [routerLink]="['/listeFactures']" routerLinkActive="router-link-active"  class="nav-link">
+                    <a [routerLink]="['/listeFactures']" routerLinkActive="active"  class="nav-link">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             Facturation
@@ -53,7 +53,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a [routerLink]="['/paiement']" routerLinkActive="router-link-active"  class="nav-link">
+                    <a [routerLink]="['/paiement']" routerLinkActive="active"  class="nav-link">
                         <i class="nav-icon far fa-calendar-alt"></i>
                         <p>
                             Faire reglement
@@ -61,8 +61,8 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
+                <li class="nav-item menu-open" [ngClass]="{'menu-open': isMenuOpen2}">
+                    <a href="javascript:void(0)" class="nav-link" (click)="toggleMenu2()">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Parametrage
@@ -71,77 +71,39 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a [routerLink]="['/listeClients']" routerLinkActive="router-link-active"  class="nav-link">
+                            <a [routerLink]="['/listeClients']" class="nav-link" routerLinkActive="active">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Gestion Clients</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/listePrestations']" routerLinkActive="router-link-active"  class="nav-link">
+                            <a [routerLink]="['/listePrestations']" class="nav-link" routerLinkActive="active">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Gestion des Prestations</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/listeSignataires']" routerLinkActive="router-link-active"  class="nav-link">
+                            <a [routerLink]="['/listeSignataires']" routerLinkActive="active"  class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Gestion des Signataires</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/listeIntitules']" routerLinkActive="router-link-active"  class="nav-link">
+                            <a [routerLink]="['/listeIntitules']" routerLinkActive="active"  class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Gestion des Intitulés</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/listeModels']" routerLinkActive="router-link-active"  class="nav-link">
+                            <a [routerLink]="['/listeModels']" routerLinkActive="active"  class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Gestion des Modeles</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-
-                <div class="btn-group">
-                    <button class="btn btn-primary dropdown-toggle" type="button" 
-                    id="dropdownMenuButton" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        Autres Parametrages
-                    </button>
-                    <!-- <li class="nav-item menu-open">
-                        <a href="#" class="nav-link active">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                Autres Parametrages
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a> -->
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li >
-                                <a class="dropdown-item" [routerLink]="['/diviFiscale']" routerLinkActive="router-link-active" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Gestion des Divisions Fiscales</p>
-                                </a>
-                            </li>
-                            <li >
-                                <a class="dropdown-item" [routerLink]="['/regimeFiscale']" routerLinkActive="router-link-active" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Gestion des Regimes Fiscaux</p>
-                                </a>
-                            </li>
-                            <li >
-                                <a class="dropdown-item" [routerLink]="['/formeJuridique']" routerLinkActive="router-link-active" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Gestion des Formes Juridique </p>
-                                </a>
-                            </li>
-                        </ul>
-                    <!-- </li> -->
-                </div>
-                <!-- <li class="nav-item menu-open">
-                    <a href="#" class="nav-link active">
+                <li class="nav-item menu-open" [ngClass]="{'menu-open': isMenuOpen}">
+                    <a href="javascript:void(0)" class="nav-link" (click)="toggleMenu()">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Autres Parametrages
@@ -150,38 +112,25 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a [routerLink]="['/diviFiscale']" routerLinkActive="router-link-active" class="nav-link">
+                            <a [routerLink]="['/diviFiscale']" routerLinkActive="active" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Gestion des Divisions Fiscales</p>
+                                <p>Gestion Divisions Fiscales</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/regimeFiscale']" routerLinkActive="router-link-active" class="nav-link">
+                            <a [routerLink]="['/regimeFiscale']" routerLinkActive="active" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Gestion des Regimes Fiscaux</p>
+                                <p>Gestion Regimes Fiscaux</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a [routerLink]="['/formeJuridique']" routerLinkActive="router-link-active" class="nav-link">
+                            <a [routerLink]="['/formeJuridique']" routerLinkActive="active" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Gestion des Formes Juridique </p>
+                                <p>Gestion Formes Juridique </p>
                             </a>
                         </li>
                     </ul>
-                </li> -->
-
-                <div class="btn-group">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Dropdown
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <li><a class="dropdown-item" href="#">Menu item</a></li>
-                        <li><a class="dropdown-item" href="#">Menu item</a></li>
-                        <li><a class="dropdown-item" href="#">Menu item</a></li>
-                    </ul>
-                </div>
-
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

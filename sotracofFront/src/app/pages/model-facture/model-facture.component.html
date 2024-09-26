@@ -1,98 +1,107 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
+<!-- messages -->
+<p-toast></p-toast>
 <div class="wrapper">
     <div class="content-wrapper" style="padding: 30px;">
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Listes des Modeles</h1>
+                        <h1>Gestion des Modeles</h1>
                     </div>
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
         </section>
         <!-- main content -->
-        <div class="card">
 
-            <div class="d-flex justify-content-end mb-4" style="padding-right: 20px;" class="card-body">
-                <button pButton icon="pi pi-plus" label="Ajouter" class="btn btn-primary"
-                    (click)="ajouter()">
-                </button>
-            </div>
-
-            <div style="padding: 20px;">
-                <p-table [value]="models" class="table table-striped" styleClass="p-datatable-gridlines"
-                    class="table small-column-width">
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Nom</th>
-                            <th style="width: 200px; text-align: center;">Actions</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-model>
-                        <tr>
-                            <td>{{ model.nom }}</td>
-                            <td>
-                                <div class="d-flex">
-                                    <button pButton pRipple icon="pi pi-pencil" class="btn btn-primary btn-sm me-2" style="margin-right: 10px;"
-                                        (click)="onEdit(model)">
-                                        Modifier
-                                    </button>
-                                    <button pButton pRipple icon="pi pi-trash" class="btn btn-danger btn-sm me-2"
-                                        (click)="onDelete(model.id)">
-                                        Supprimer
-                                    </button>
+            <div class="p-grid">
+                <div class="p-col-12 p-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h3><strong>Liste des modèles de facture</strong></h3>
                                 </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </div>
-        </div>
-        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [responsive]="true" [baseZIndex]="10000"
-        [style]="{'width': '600px'}" [contentStyle]="{ 'backdrop-filter': 'blur(10px)' }">
-        <div class="card">
-            <div class="card-header">
-                {{ editMode ? 'Modifier ce model' : 'Ajouter un model' }}
-            </div>
-            <div class="card-body">
-                <form [formGroup]="modelForm" (ngSubmit)="onSubmit()">
-                    <div class="p-fluid p-formgrid p-grid justify-content-center">
-                        <div class="p-field p-col-6">
-                            <label for="nom" class="mb-2">Nom</label>
-                            <input id="nom" type="text" class="form-control mb-2" formControlName="nom" 
-                            [style]="{'width': '350px', 'height': '40px'}"/>
-                            <div *ngIf="f['nom'].invalid && f['nom'].touched" class="text-danger">
-                                <small *ngIf="f['nom'].errors?.['required']">Le nom est requis.</small>
+                                <div>
+                                    <button pButton icon="pi pi-add" class="btn btn-primary" 
+                                    type="submit" (click)="openAddDialog()" label=" Ajouter"></button>
+                                </div>
                             </div>
                         </div>
-                        <div class="p-field p-col-6">
-                            <label for="champs" class="mb-2">Champs: </label>
-                            <p-multiSelect 
-                                [options]="listChamps" 
-                                formArrayName="champs" 
-                                optionLabel="nom" 
-                                display="chip" 
-                                [filter]="true"
-                                [style]="{'width': '350px', 'height': '40px'}"
-                                (onChange)="onFieldChange($event)">
-                                
-                            </p-multiSelect>
-                            
+                        <div style="padding: 20px;">
+                            <p-table [value]="modelFactures" class="table table-striped" styleClass="p-datatable-gridlines"
+                                class="table small-column-width">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th style="width: 280px; text-align: center;">Actions</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-model>
+                                    <tr>
+                                        <td>{{ model.nom }}</td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button pButton icon="pi pi-pencil" class="btn btn-primary" label=" Modifier"
+                                                    style="margin-right: 10px;" (click)="openEditDialog(model)">   
+                                                </button>
+                                                <button pButton pRipple icon="pi pi-trash" class="btn btn-danger btn-sm me-2"
+                                                    (click)="deleteModelFacture(model.id)">
+                                                    Supprimer
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end mt-4">
+                </div>
+            </div>
+
+        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" 
+            [responsive]="true"
+            [baseZIndex]="10000" [style]="{'width': '600px'}"
+            [contentStyle]="{ 'backdrop-filter': 'blur(10px)' }">
+            <div >
+                <form [formGroup]="modelFactureForm" (ngSubmit)="onSubmit()">
+                    <div class="card-header d-flex justify-content-center" style="margin-top: 20px;">
+                        <h3 class="text-center" *ngIf="isEditing"><strong>Modifier ce modèle</strong></h3>
+                        <h3 class="text-center" *ngIf="!isEditing"><strong>Ajouter un modèle</strong></h3>
+                    </div>
+                    <div class="p-fluid p-formgrid p-grid justify-content-center" style="margin-left: 20px; margin-top: 20px;">
+                        <div class="p-field p-col-6">
+                            <label for="nom" class="mb-2">Nom </label>
+                            <input id="nom" pInputText formControlName="nom" class="form-control mb-2" placeholder="Nom du modèle" 
+                            [style]="{'width': '350px', 'height': '40px'}"/>
+                            <small *ngIf="modelFactureForm.get('nom')?.invalid && modelFactureForm.get('nom')?.touched" class="p-error">
+                                Le nom du modèle est requis.
+                            </small>
+                        </div>
+                        <div class="p-field p-col-6">
+                            <label for="champs" class="mb-2">Champs </label>
+                            <p-multiSelect [options]="champsDisponibles" 
+                                formControlName="champs" 
+                                optionLabel="nom" placeholder="Sélectionner les champs" 
+                                [filter]="true" display="chip"
+                                [style]="{'width': '350px', 'height': '40px'}">
+                            </p-multiSelect>
+                            <small *ngIf="modelFactureForm.get('champs')?.invalid && modelFactureForm.get('champs')?.touched" class="p-error">
+                                Au moins un champ est requis.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-4" style="margin: 20px;">
                         <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;"
-                            (click)="cancel()">Annuler</button>
-                        <button type="submit"  class="btn btn-primary" [disabled]="modelForm.invalid">{{
-                            editMode ?
-                            'Mettre à jour' : 'Ajouter' }}</button>
+                            (click)="resetForm()">Annuler</button>
+                        <button pButton icon="pi pi-save" class="btn btn-primary" type="submit" label=" Enregistrer"
+                            [disabled]="modelFactureForm.invalid">
+                        </button>
                     </div>
                 </form>
             </div>
-        </div>
         </p-dialog>
-
     </div>
 </div>
 <app-main-footer></app-main-footer>

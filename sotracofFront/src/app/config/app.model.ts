@@ -75,11 +75,38 @@ export class ChampsDate {
       ligneFactureList!: ModelFacture[];
 
       }
-export interface ModelFacture{
-  id?: number;
-  nom?: string;
-  champsListDate?: ChampsDate[];
-  champsListDouble?: ChampsDouble[];
-  champsListString?: ChampsString[];
+// export interface ModelFacture{
+//   id?: number;
+//   nom?: string;
+//   champsListDate?: ChampsDate[];
+//   champsListDouble?: ChampsDouble[];
+//   champsListString?: ChampsString[];
   
+// }
+
+export interface ModelFactureChamp {
+    id?: number;
+    modelFacture?: ModelFacture;
+    champ?: Champs;
+}
+
+export interface ModelFacture {
+    id?: number;
+    nom?: string;
+    champsList?: ModelFactureChamp[];
+}
+
+export enum eTypeChamp {
+    STRING = 'STRING',
+    DOUBLE = 'DOUBLE',
+    DATE = 'DATE'
+}
+export interface Champs {
+    id?: number;
+    nom?: string;
+    type: eTypeChamp;
+    // Valeur pour chaque type de champ
+    valeurString?: string;
+    valeurDouble?: number;
+    valeurDate?: Date;
 }
