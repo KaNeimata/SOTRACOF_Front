@@ -13,24 +13,19 @@ import { ParametreService } from 'src/app/parametre.service';
 })
 export class IntitulesComponent implements OnInit {
 
-  // champsDateArray: any[] = [];
-  // champsDoubleArray: any[] = [];
-  // champsStringArray: any[] = [];
-  // champsDate= new ChampsDate();
-  // champsDouble =new ChampsDouble();
-  // champsString= new ChampsString();
 
   champsForm: FormGroup;
   champsList: Champs[] = [];
-  // public champ: Champs[] = {};
   selectedChamp: Champs | null = null;
+  displayAddDialog: boolean = false;  // pop up dajout
+  displayEditDialog: boolean = false; 
 
   typeOptions = [
     { label: 'Texte', value: eTypeChamp.STRING },
     { label: 'Nombre', value: eTypeChamp.DOUBLE },
     { label: 'Date', value: eTypeChamp.DATE }
   ];
-;
+
 
   constructor(private parametreService: ParametreService,
     private fb: FormBuilder,
@@ -38,117 +33,8 @@ export class IntitulesComponent implements OnInit {
     private messageService: MessageService
   ) {}
   ngOnInit(): void {
-
-    //  this.chargerListChamps();
-    
     this.initForm();
     this.loadChamps();
-
-    // Gestion dynamique des valeurs
-    // this.champsForm.get('type')?.valueChanges.subscribe(type => {
-    //   this.resetValues();
-    //   if (type === eTypeChamp.STRING) {
-    //     this.champsForm.get('valeurString')?.setValidators(Validators.required);
-    //   } else if (type === eTypeChamp.DOUBLE) {
-    //     this.champsForm.get('valeurDouble')?.setValidators(Validators.required);
-    //   } else if (type === eTypeChamp.DATE) {
-    //     this.champsForm.get('valeurDate')?.setValidators(Validators.required);
-    //   }
-    //   this.champsForm.updateValueAndValidity();
-    // });
-
-    // chargerListChamps(): any {
-    //   this.parametreService.listeChampsDate().subscribe((prods: any) => {
-    //     this.champsDateArray = prods;
-    //     console.log(this.champsDateArray);
-    //      });
-
-    //   this.parametreService.listeChampsDouble().subscribe((prods: any) => {
-    //     this.champsDoubleArray = prods;
-    //     console.log(this.champsDoubleArray);
-    //   });
-    
-    //   this.parametreService.listeChampsString().subscribe((prods: any) => {
-    //     this.champsStringArray = prods;
-    //     console.log(this.champsStringArray);
-    //      });
-    // }
-
-    // isPopupOpen = false;
-
-
-    // openPopup() {
-    //   this.isPopupOpen = true;
-    // }
-
-    // closePopup() {
-    //   this.isPopupOpen = false;
-    // }
-
-    // submitForm() {
-    //   this.parametreService.addChampsDate(this.champsDate).subscribe(vir=>{
-    //     this.chargerListChamps();
-
-    //   })
-    //   this.closePopup();
-    // }
-
-    // deleteChampDate(p:ChampsDate){
-    //   this.parametreService.supprimerChampsDate(p.id).subscribe(()=>{
-    //     this.chargerListChamps();
-    //   });
-
-    // }
-    // isPopupOpenD = false;
-
-
-    // openPopupD() {
-    //   this.isPopupOpenD = true;
-    // }
-
-    // closePopupD() {
-    //   this.isPopupOpenD = false;
-    // }
-
-    // submitFormD() {
-    //   this.parametreService.addChampsDouble(this.champsDouble).subscribe(vir=>{
-    //     this.chargerListChamps();
-
-    //   })
-    //   this.closePopupD();
-    // }
-
-    // deleteChampDouble(p:ChampsDouble){
-    //   this.parametreService.supprimerChampsDouble(p.id).subscribe(()=>{
-    //     this.chargerListChamps();
-    //   });
-
-    // }
-
-    // isPopupOpenS = false;
-
-
-    // openPopupS() {
-    //   this.isPopupOpenS = true;
-    // }
-
-    // closePopupS() {
-    //   this.isPopupOpenS = false;
-    // }
-
-    // submitFormS() {
-    //   this.parametreService.addChampsString(this.champsString).subscribe(vir=>{
-    //     this.chargerListChamps();
-    //   })
-    //   this.closePopupS();
-    // }
-
-    // deleteChampString(p:ChampsString){
-    //   this.parametreService.supprimerChampsString(p.id).subscribe(()=>{
-    //     this.chargerListChamps();
-    //   });
-
-    // }
 
   }
   // chargement
@@ -168,62 +54,84 @@ export class IntitulesComponent implements OnInit {
       type: [null, Validators.required],
     })
   }
-  // resetValues() {
-  //   this.champsForm.patchValue({
-  //     valeurString: '',
-  //     valeurDouble: null,
-  //     valeurDate: null
-  //   });
-  //   this.champsForm.get('valeurString')?.clearValidators();
-  //   this.champsForm.get('valeurDouble')?.clearValidators();
-  //   this.champsForm.get('valeurDate')?.clearValidators();
 
-  //   throw new Error('Method not implemented.');
-  // }
-
-   onSubmit() {
-    if (this.champsForm.valid) {
-      const champsData = this.champsForm.value;
-      if (champsData.id) {
-        // Mettre à jour le champ existant
-        this.updateChamps(champsData);
-      } else {
-        // Créer un nouveau champ
-        this.champsService.createChamps(champsData).subscribe(
-          (response) => {
-            this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ ajouté avec succès' });
-            this.loadChamps();  // Recharger la liste des champs après ajout
-            this.resetForm();
-          },
-          (error) => {
-            this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de l\'ajout du champ' });
-          }
-        );
-      }
-    }
-   }
+  openAddDialog() {
+  this.champsForm.reset();
+  this.displayAddDialog = true;
+  }
   
+  //  onSubmit() {
+  //   if (this.champsForm.valid) {
+  //     const champsData = this.champsForm.value;
+  //     console.log('Données envoyées au backend:', champsData);
+  //       this.champsService.createChamps(champsData).subscribe(
+  //         (response) => {
+  //           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ ajouté avec succès' });
+  //           this.loadChamps();  // Recharger la liste des champs après ajout
+  //           this.resetForm();
+  //           this.displayAddDialog = false;
+  //         },
+  //         (error) => {
+  //           this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de l\'ajout du champ' });
+  //         }
+  //       );
+  //   }
+  //  }
+  
+  // onSubmitModif() {
+  //   if (this.champsForm.valid) {
+  //     const champsData = this.champsForm.value;
+  //     console.log('Données envoyées au backend:', champsData);
+  //       this.champsService.updateChamps(champsData).subscribe(
+  //         (response) => {
+  //           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ mis à jour avec succès' });
+  //           this.loadChamps();  // Recharger la liste des champs après ajout
+  //           this.resetForm();
+  //           this.displayEditDialog = false;
+  //         },
+  //             (error) => {
+  //     this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du champ' });
+  //   });
+  //   }
+  //  }
+  
+onSubmitModif() {
+  if (this.champsForm.valid) {
+    const champsData = this.champsForm.value;
+    console.log('Formulaire soumis avec les données:', champsData);  // Inspecte le contenu du formulaire
+
+    if (champsData.id) {
+      console.log('ID du champ trouvé:', champsData.id);  // Affiche l'ID pour confirmation
+      this.champsService.updateChamps(champsData).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ mis à jour avec succès' });
+          this.loadChamps();  // Recharger la liste des champs après la mise à jour
+          this.resetForm();
+          this.displayEditDialog = false;  // Fermer le dialogue de modification
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du champ' });
+        }
+      );
+    } else {
+      console.error('ID manquant:', champsData);  // Log plus détaillé si l'ID est manquant
+      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Le champ sélectionné est incorrect' });
+    }
+  }
+}
+
+
   editChamps(champ: Champs) {
   this.selectedChamp = champ;
-  this.champsForm.patchValue(champ);
+  this.champsForm.patchValue({
+    id: champ.id,
+    nom: champ.nom,
+    type: champ.type,
+  });
+  console.log('Formulaire après patchValue:', this.champsForm.value);
+    this.displayEditDialog = true;
   console.log(this.champsForm.value);  // Pour vérifier les données avant la mise à jour
-}
-
-  // Mettre à jour un champ
-  updateChamps(champsData: Champs) {
-  console.log(champsData);  // Vérifiez si le champ 'id' est bien présent
-  this.champsService.updateChamps(champsData).subscribe(
-    (response) => {
-      this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ mis à jour avec succès' });
-      this.loadChamps();
-      this.resetForm();
-    },
-    (error) => {
-      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du champ' });
-    }
-  );
-}
-
+  }
    // Supprimer un champ
   deleteChamps(id: number) {
     this.champsService.deleteChamps(id).subscribe(
@@ -236,13 +144,11 @@ export class IntitulesComponent implements OnInit {
       }
     );
   }
-
-//   cancel(): void {
-//       this.champsForm.reset();
-// }
   // Réinitialiser le formulaire
   resetForm() {
     this.champsForm.reset();
     this.selectedChamp = null;
+    this.displayEditDialog = false;
+
   }
 }

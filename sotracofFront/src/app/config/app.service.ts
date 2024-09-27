@@ -189,7 +189,7 @@ export class AppServices {
 
   // Mettre à jour un modèle de facture existant
   updateModelFacture(dto: ModelFacture): Observable<HttpResponse<ModelFacture>> {
-    return this.http.put<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}`, dto, { observe: 'response' });
+    return this.http.put<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}/${dto.id}`, dto, { observe: 'response' });
   }
 
   // Supprimer un modèle de facture
@@ -210,7 +210,7 @@ export class AppServices {
   }
 
   updateChamps(dto: Champs): Observable<HttpResponse<Champs>> {
-    return this.http.put<Champs>(`${AppEndpoint.CHAMPS_URL}${dto.id}`, dto, { observe: 'response' });
+    return this.http.put<Champs>(`${AppEndpoint.CHAMPS_URL}/${dto.id}`, dto, { observe: 'response' });
   }
 
   deleteChamps(id: number): Observable<HttpResponse<any>> {

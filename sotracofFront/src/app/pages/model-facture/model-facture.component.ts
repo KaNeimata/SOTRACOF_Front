@@ -34,8 +34,9 @@ export class ModelFactureComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadChamps();  // Charger les champs disponibles
-    this.loadModelFactures();  // Charger les modèles de facture existants
+    this.loadModelFactures();
   }
+
 
   // Charger les champs disponibles pour le modèle
   loadChamps() {
@@ -51,6 +52,13 @@ export class ModelFactureComponent implements OnInit {
       console.log('Success: donnee charger', this.modelFactures);
     });
   }
+
+  loadClients() {
+    
+  }
+  loadPrestations() {
+    
+  }
 // pop up to add
   openAddDialog() {
     this.isEditing = false;
@@ -65,56 +73,103 @@ export class ModelFactureComponent implements OnInit {
     this.displayDialog = true; // Ouvrir le dialogue
   }
   // Créer ou mettre à jour un modèle de facture
-  onSubmit() {
+  // onSubmit() {
+  //   if (this.modelFactureForm.valid) {
+  //     const modelData = this.modelFactureForm.value;
+      
+
+  //     console.log('Données envoyées au backend:', modelData); 
+
+  //   if (modelData.champs.length === 0) {
+  //     this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Veuillez sélectionner au moins un champ' });
+  //     return;
+  //   }
+  //     if (this.selectedModelFacture) {
+  //       modelData.champs = modelData.champs.map((champ: any) => champ.id);
+  //     if (this.selectedModelFacture && this.selectedModelFacture.id) {
+  //      modelData.id = this.selectedModelFacture.id; // Assigne l'ID du modèle sélectionné
+  //     }
+  //     // Mise à jour d'un modèle existant
+  //     this.modelFactureService.updateModelFacture(modelData).subscribe(
+  //       (response) => {
+  //         this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle mis à jour avec succès' });
+  //         this.loadModelFactures();
+  //         // this.cancelEdit();  // Fermer le dialog après la mise à jour
+  //       },
+  //       (error) => {
+  //         this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du modèle' });
+  //       }
+  //     );
+  //   }
+
+  //     else {
+  //       // Créer un nouveau modèle
+  //       this.modelFactureService.createModelFacture(modelData).subscribe(
+  //         (response) => {
+  //           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle créé avec succès' });
+  //           this.loadModelFactures();
+  //           // this.cancelEdit();
+            
+  //         },
+  //         (error) => {
+  //           this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la création du modèle' });
+  //         }
+  //       );
+  //     }
+  //   }
+  // }
+
+
+onSubmit() {
     if (this.modelFactureForm.valid) {
-      const modelData = this.modelFactureForm.value;
+        const modelData = this.modelFactureForm.value;
+        
+        console.log('Données envoyées au backend:', modelData); 
 
-      console.log('Données envoyées au backend:', modelData); 
-
-    if (modelData.champs.length === 0) {
-      this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Veuillez sélectionner au moins un champ' });
-      return;
-    }
-
-    if (this.selectedModelFacture) {
-      // Mise à jour d'un modèle existant
-      this.modelFactureService.updateModelFacture(modelData).subscribe(
-        (response) => {
-          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle mis à jour avec succès' });
-          this.loadModelFactures();
-          this.cancelEdit();  // Fermer le dialog après la mise à jour
-        },
-        (error) => {
-          this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du modèle' });
+        if (modelData.champs.length === 0) {
+            this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Veuillez sélectionner au moins un champ' });
+            return;
         }
-      );
+        
+        // Vérification si nous sommes en mode mise à jour
+        if (this.selectedModelFacture) {
+            modelData.champs = modelData.champs.map((champ: any) => champ.id); // Cela peut poser problème
+            
+            if (this.selectedModelFacture.id) {
+                modelData.id = this.selectedModelFacture.id; // Assigne l'ID du modèle sélectionné
+            }
+            
+            console.log('Avant mise à jour:', modelData); // Ajout d'un log
+            
+            // Mise à jour d'un modèle existant
+            this.modelFactureService.updateModelFacture(modelData).subscribe(
+                (response) => {
+                    this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle mis à jour avec succès' });
+                    this.loadModelFactures();
+                },
+                (error) => {
+                    console.error('Erreur lors de la mise à jour:', error); // Log de l'erreur
+                    this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du modèle' });
+                }
+            );
+        } else {
+            // Créer un nouveau modèle
+            console.log('Avant création:', modelData); // Ajout d'un log
+            
+            this.modelFactureService.createModelFacture(modelData).subscribe(
+                (response) => {
+                    this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle créé avec succès' });
+                    this.loadModelFactures();
+                },
+                (error) => {
+                    console.error('Erreur lors de la création:', error); // Log de l'erreur
+                    this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la création du modèle' });
+                }
+            );
+        }
+      this.displayDialog = false;
     }
-
-      else {
-        // Créer un nouveau modèle
-        this.modelFactureService.createModelFacture(modelData).subscribe(
-          (response) => {
-            this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle créé avec succès' });
-            this.loadModelFactures();
-            this.cancelEdit();
-          },
-          (error) => {
-            this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la création du modèle' });
-          }
-        );
-      }
-    }
-  }
-
-  cancelAdd(): void {
-  this.displayAddDialog = false;
-  this.modelFactureForm.reset();
 }
-  cancelEdit(): void {
-  this.displayEditDialog = false;
-  this.modelFactureForm.reset();
-}
-
 
   // Sélectionner un modèle pour modification
   editModelFacture(model: ModelFacture) {
