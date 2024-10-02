@@ -14,63 +14,22 @@
       </div>
     </section>
 
-    <div class="container d-flex justify-content-center">
-      <!-- <div class="card" style="width: 50%;">
-        <div class="card-header d-flex justify-content-center">
-          <h3><strong>Faire un enregistrement d'intitules</strong></h3>
-        </div>
-        <div style="padding: 20px;" class="card-body">
-          <form [formGroup]="champsForm">
-            <div class="p-fluid p-formgrid p-grid justify-content-center">
-              <div class="p-field p-col-6">
-                <label for="nom" class="mb-2">Nom du Champ</label>
-                <input id="nom" type="text" class="form-control mb-2" formControlName="nom"
-                  [style]="{'width': '350px', 'height': '40px'}" />
-                <div>
-                  <small *ngIf="champsForm.get('nom')?.invalid && champsForm.get('nom')?.touched" class="p-error">
-                    Le nom du champ est requis.
-                  </small>
-                </div>
-              </div>
-      
-              <div class="p-field p-col-6">
-                <label for="type" class="mb-2">Type de Champ</label>
-                <p-dropdown id="type" [options]="typeOptions" optionValue="value" formControlName="type" optionLabel="label"
-                  [style]="{'width': '350px', 'height': '40px'}" placeholder="Sélectionner un type">
-                </p-dropdown>
-                <small *ngIf="champsForm.get('type')?.invalid && champsForm.get('type')?.touched" class="p-error">
-                  Le type du champ est requis.
-                </small>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="card-footer d-flex justify-content-end">
-          <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;"
-            (click)="resetForm()">Annuler</button>
-          <button pButton icon="pi pi-save" class="btn btn-primary" type="submit" label=" Enregistrer"
-            (click)="onSubmit()" [disabled]="champsForm.invalid"></button>
-        </div>
-      </div> -->
-    </div>
-
     <div class="card">
-      <!-- <div class="card-header d-flex justify-content-center"> -->
         <div class="card-header">
           <div class="d-flex justify-content-between">
             <div>
               <h3><strong>Liste des champs</strong></h3>
             </div>
             <div>
-              <button pButton icon="pi pi-add" 
+              <button pButton icon="pi pi-plus" 
               class="btn btn-primary" type="submit" (click)="openAddDialog()"
                 label=" Ajouter"></button>
             </div>
           </div>
-        <!-- </div> -->
       </div>
       <div style="padding: 20px;">
         <p-table [value]="champsList" class="table table-striped" styleClass="p-datatable-gridlines"
+          [paginator]="true" [rows]="5" [responsiveLayout]="'scroll'"
           class="table small-column-width">
           <ng-template pTemplate="header">
             <tr>
@@ -133,7 +92,7 @@
         <div class="d-flex justify-content-end" style="margin: 20px;">
           <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;"
             (click)="resetForm(); displayAddDialog = false;">Annuler</button>
-          <button pButton icon="pi pi-save" class="btn btn-primary" type="submit" 
+          <button pButton icon="pi pi-save" class="btn btn-primary" type="submit" (click)="onSubmit()"
           label=" Enregistrer" [disabled]="champsForm.invalid" ></button>
         </div>
       </div>
@@ -160,8 +119,9 @@
       
               <div class="p-field p-col-6">
                 <label for="type" class="mb-2">Type de Champ</label>
-                <p-dropdown id="type" [options]="typeOptions" optionValue="value" formControlName="type" optionLabel="label"
-                  [style]="{'width': '350px', 'height': '40px'}" placeholder="Sélectionner un type">
+                <p-dropdown id="type" [options]="typeOptions" optionValue="value" 
+                formControlName="type" optionLabel="label" [style]="{'width': '350px', 'height': '40px'}"
+                placeholder="Sélectionner un type">
                 </p-dropdown>
                 <small *ngIf="champsForm.get('type')?.invalid && champsForm.get('type')?.touched" class="p-error">
                   Le type du champ est requis.

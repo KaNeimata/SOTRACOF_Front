@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IntitulesComponent } from '../intitules/intitules.component';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ChampsDate, ModelFacture, Champs } from 'src/app/config/app.model';
+import { ModelFacture, Champs, Client, TypePrestation } from 'src/app/config/app.model';
 import { AppServices } from 'src/app/config/app.service';
 import { MessageService } from 'primeng/api';
 
@@ -13,7 +13,9 @@ import { MessageService } from 'primeng/api';
 export class ModelFactureComponent implements OnInit {
 
   modelFactureForm: FormGroup;
-  champsDisponibles: Champs[] = [];   //champs dispo
+  champsDisponibles: Champs[] = [];  //champs dispo
+  clients: Client[] = [];
+  listPrestations: TypePrestation[] = [];
   modelFactures: ModelFacture[] = [];  // Liste des modèles
   selectedModelFacture: ModelFacture | null = null;  // Modèle sélectionné pour modification
   displayDialog: boolean = false;
@@ -27,18 +29,26 @@ export class ModelFactureComponent implements OnInit {
     private messageService: MessageService
   ) {
     this.modelFactureForm = this.fb.group({
-      nom: ['', Validators.required],  // Nom du modèle de facture
-      champs: [[], Validators.required]  // Champs associés au modèle
+      id: null,
+      nom: ['', Validators.required], 
+      champs: [[], Validators.required],
+      client: [null, Validators.required],
+      // client: [null, Validators.required],
+      tP: [null, Validators.required],
+
     });
   }
 
   ngOnInit(): void {
     this.loadChamps();  // Charger les champs disponibles
     this.loadModelFactures();
+    this.loadClients();
+    this.loadPrestations();
   }
 
 
-  // Charger les champs disponibles pour le modèle
+
+  // Charger les champs
   loadChamps() {
     this.modelFactureService.getAllChamps().subscribe((champs: Champs[]) => {
       this.champsDisponibles = champs;
@@ -52,129 +62,113 @@ export class ModelFactureComponent implements OnInit {
       console.log('Success: donnee charger', this.modelFactures);
     });
   }
-
+// charger clients 
   loadClients() {
-    
+    // this.modelFactureService.getAllClient().subscribe((clt: Client[]) => { 
+    //   this.clients = clt.map(client => ({
+    //     id: client.id,
+    //     nom: client.nom
+    //   }));
+    // });
+    this.modelFactureService.getAllClient().subscribe(
+      (clients: Client[]) => {
+        this.clients = clients.map(client => ({
+          id: client.id,
+          nom: client.nom
+        }));
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des clients :', error);
+        this.messageService.add({severity: 'error', summary: 'Erreur', detail: 'Impossible de charger les clients'});
+      }
+    );
   }
+
   loadPrestations() {
-    
+    this.modelFactureService.getAllPrestationforOther().subscribe((prestation: TypePrestation[]) => { 
+      this.listPrestations = prestation;
+    });
   }
 // pop up to add
   openAddDialog() {
     this.isEditing = false;
-    this.modelFactureForm.reset();  // Réinitialiser le formulaire
-    this.displayDialog = true; // Ouvrir le dialogue
+    this.modelFactureForm.reset();  
+    this.displayDialog = true;
   }
   // edit
   openEditDialog(model: ModelFacture) {
     this.isEditing = true;
     this.selectedModelFacture = model;
-    this.modelFactureForm.patchValue(model);  // Remplir le formulaire
-    this.displayDialog = true; // Ouvrir le dialogue
+    this.modelFactureForm.patchValue(model);  
+    this.displayDialog = true; 
   }
-  // Créer ou mettre à jour un modèle de facture
-  // onSubmit() {
-  //   if (this.modelFactureForm.valid) {
-  //     const modelData = this.modelFactureForm.value;
-      
 
-  //     console.log('Données envoyées au backend:', modelData); 
-
-  //   if (modelData.champs.length === 0) {
-  //     this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Veuillez sélectionner au moins un champ' });
-  //     return;
-  //   }
-  //     if (this.selectedModelFacture) {
-  //       modelData.champs = modelData.champs.map((champ: any) => champ.id);
-  //     if (this.selectedModelFacture && this.selectedModelFacture.id) {
-  //      modelData.id = this.selectedModelFacture.id; // Assigne l'ID du modèle sélectionné
-  //     }
-  //     // Mise à jour d'un modèle existant
-  //     this.modelFactureService.updateModelFacture(modelData).subscribe(
-  //       (response) => {
-  //         this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle mis à jour avec succès' });
-  //         this.loadModelFactures();
-  //         // this.cancelEdit();  // Fermer le dialog après la mise à jour
-  //       },
-  //       (error) => {
-  //         this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du modèle' });
-  //       }
-  //     );
-  //   }
-
-  //     else {
-  //       // Créer un nouveau modèle
-  //       this.modelFactureService.createModelFacture(modelData).subscribe(
-  //         (response) => {
-  //           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle créé avec succès' });
-  //           this.loadModelFactures();
-  //           // this.cancelEdit();
-            
-  //         },
-  //         (error) => {
-  //           this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la création du modèle' });
-  //         }
-  //       );
-  //     }
-  //   }
-  // }
-
-
-onSubmit() {
+  // creation 
+   onSubmit() {
     if (this.modelFactureForm.valid) {
-        const modelData = this.modelFactureForm.value;
-        
-        console.log('Données envoyées au backend:', modelData); 
+      const modelData = this.modelFactureForm.value;
+      
+      console.log('Données envoyées au backend pour création:', modelData);
 
-        if (modelData.champs.length === 0) {
-            this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Veuillez sélectionner au moins un champ' });
-            return;
+      if (modelData.champs.length === 0) {
+        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Veuillez sélectionner au moins un champ' });
+        return;
+      }
+      
+      console.log('Avant création:', modelData);
+      
+      this.modelFactureService.createModelFacture(modelData).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle créé avec succès' });
+          this.loadModelFactures();
+          this.displayDialog = false;
+        },
+        (error) => {
+          console.error('Erreur lors de la création:', error);
+          this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la création du modèle' });
         }
-        
-        // Vérification si nous sommes en mode mise à jour
-        if (this.selectedModelFacture) {
-            modelData.champs = modelData.champs.map((champ: any) => champ.id); // Cela peut poser problème
-            
-            if (this.selectedModelFacture.id) {
-                modelData.id = this.selectedModelFacture.id; // Assigne l'ID du modèle sélectionné
-            }
-            
-            console.log('Avant mise à jour:', modelData); // Ajout d'un log
-            
-            // Mise à jour d'un modèle existant
-            this.modelFactureService.updateModelFacture(modelData).subscribe(
-                (response) => {
-                    this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle mis à jour avec succès' });
-                    this.loadModelFactures();
-                },
-                (error) => {
-                    console.error('Erreur lors de la mise à jour:', error); // Log de l'erreur
-                    this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du modèle' });
-                }
-            );
-        } else {
-            // Créer un nouveau modèle
-            console.log('Avant création:', modelData); // Ajout d'un log
-            
-            this.modelFactureService.createModelFacture(modelData).subscribe(
-                (response) => {
-                    this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle créé avec succès' });
-                    this.loadModelFactures();
-                },
-                (error) => {
-                    console.error('Erreur lors de la création:', error); // Log de l'erreur
-                    this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la création du modèle' });
-                }
-            );
-        }
-      this.displayDialog = false;
+      );
     }
-}
+   }
+  
+  // modif
+  submitModif() {
+    if (this.modelFactureForm.valid && this.selectedModelFacture) {
+      const modelData = this.modelFactureForm.value;
+      
+      console.log('Données envoyées au backend pour modification:', modelData);
+
+      if (modelData.champs.length === 0) {
+        this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Veuillez sélectionner au moins un champ' });
+        return;
+      }
+      
+      modelData.champs = modelData.champs.map((champ: any) => champ.id);
+      
+      if (this.selectedModelFacture.id) {
+        modelData.id = this.selectedModelFacture.id;
+      }
+      
+      console.log('Avant mise à jour:', modelData);
+      
+      this.modelFactureService.updateModelFacture(modelData).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Modèle mis à jour avec succès' });
+          this.loadModelFactures();
+          this.displayDialog = false;
+        },
+        (error) => {
+          console.error('Erreur lors de la mise à jour:', error);
+          this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du modèle' });
+        }
+      );
+    }
+  }
 
   // Sélectionner un modèle pour modification
   editModelFacture(model: ModelFacture) {
     this.selectedModelFacture = model;
-    this.modelFactureForm.patchValue(model);  // Remplir le formulaire avec les données du modèle sélectionné
+    this.modelFactureForm.patchValue(model); 
   }
 
   // Supprimer un modèle de facture
@@ -194,7 +188,6 @@ onSubmit() {
   resetForm() {
     // this.selectedModelFacture = null;
     this.modelFactureForm.reset();
-    this.displayDialog = false; // Fermer le dialogue
-
+    this.displayDialog = false; 
   }
 }

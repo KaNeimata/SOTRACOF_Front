@@ -24,14 +24,14 @@
                                     <h3><strong>Liste des modèles de facture</strong></h3>
                                 </div>
                                 <div>
-                                    <button pButton icon="pi pi-add" class="btn btn-primary" 
+                                    <button pButton icon="pi pi-plus" class="btn btn-primary" 
                                     type="submit" (click)="openAddDialog()" label=" Ajouter"></button>
                                 </div>
                             </div>
                         </div>
                         <div style="padding: 20px;">
                             <p-table [value]="modelFactures" class="table table-striped" styleClass="p-datatable-gridlines"
-                                class="table small-column-width">
+                                class="table small-column-width" [paginator]="true" [rows]="5" [responsiveLayout]="'scroll'">
                                 <ng-template pTemplate="header">
                                     <tr>
                                         <th>Nom</th>
@@ -60,12 +60,11 @@
                 </div>
             </div>
 
-        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" 
-            [responsive]="true"
-            [baseZIndex]="10000" [style]="{'width': '600px'}"
-            [contentStyle]="{ 'backdrop-filter': 'blur(10px)' }">
-            <div >
-                <form [formGroup]="modelFactureForm" (ngSubmit)="onSubmit()">
+<!-- modif  et ceation -->
+        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [responsive]="true" [baseZIndex]="10000"
+            [style]="{'width': '600px'}" [contentStyle]="{ 'backdrop-filter': 'blur(10px)' }">
+            <div>
+                <form [formGroup]="modelFactureForm" (ngSubmit)="isEditing ? submitModif() : onSubmit()">
                     <div class="card-header d-flex justify-content-center" style="margin-top: 20px;">
                         <h3 class="text-center" *ngIf="isEditing"><strong>Modifier ce modèle</strong></h3>
                         <h3 class="text-center" *ngIf="!isEditing"><strong>Ajouter un modèle</strong></h3>
@@ -73,30 +72,43 @@
                     <div class="p-fluid p-formgrid p-grid justify-content-center" style="margin-left: 20px; margin-top: 20px;">
                         <div class="p-field p-col-6">
                             <label for="nom" class="mb-2">Nom </label>
-                            <input id="nom" pInputText formControlName="nom" class="form-control mb-2" placeholder="Nom du modèle" 
-                            [style]="{'width': '350px', 'height': '40px'}"/>
-                            <small *ngIf="modelFactureForm.get('nom')?.invalid && modelFactureForm.get('nom')?.touched" class="p-error">
+                            <input id="nom" pInputText formControlName="nom" class="form-control mb-2"
+                                placeholder="Nom du modèle" [style]="{'width': '350px', 'height': '40px'}" />
+                            <small *ngIf="modelFactureForm.get('nom')?.invalid && modelFactureForm.get('nom')?.touched"
+                                class="p-error">
                                 Le nom du modèle est requis.
                             </small>
                         </div>
                         <div class="p-field p-col-6">
                             <label for="champs" class="mb-2">Champs </label>
-                            <p-multiSelect [options]="champsDisponibles" 
-                                formControlName="champs" 
-                                optionLabel="nom" placeholder="Sélectionner les champs" 
-                                [filter]="true" display="chip"
+                            <p-multiSelect [options]="champsDisponibles" formControlName="champs" optionLabel="nom"
+                                placeholder="Sélectionner les champs" [filter]="true" display="chip"
                                 [style]="{'width': '350px', 'height': '40px'}">
                             </p-multiSelect>
-                            <small *ngIf="modelFactureForm.get('champs')?.invalid && modelFactureForm.get('champs')?.touched" class="p-error">
+                            <small *ngIf="modelFactureForm.get('champs')?.invalid && modelFactureForm.get('champs')?.touched"
+                                class="p-error">
                                 Au moins un champ est requis.
                             </small>
+                        </div>
+                        <div class="p-field p-col-6">
+                            <label for="client" class="mb-2">Client</label>
+                            <p-dropdown [options]="clients" formControlName="client" id="client"
+                            optionLabel="nom" optionValue="id" placeholder="Sélectionnez un client"
+                            [style]="{'width': '350px', 'height': '40px'}">
+                            </p-dropdown>
+                        </div>
+                        <div class="p-field p-col-6">
+                            <label for="tP" class="mb-2">Prestation</label>
+                            <p-dropdown [options]="listPrestations" formControlName="tP" optionLabel="nom" optionValue="id"
+                            placeholder="Sélectionnez une prestation" [style]="{'width': '350px', 'height': '40px'}">
+                            </p-dropdown>
                         </div>
                     </div>
                     <div class="d-flex justify-content-end mt-4" style="margin: 20px;">
                         <button type="button" class="btn btn-secondary ms-sm-4" style="margin-right: 20px;"
                             (click)="resetForm()">Annuler</button>
-                        <button pButton icon="pi pi-save" class="btn btn-primary" type="submit" label=" Enregistrer"
-                            [disabled]="modelFactureForm.invalid">
+                        <button pButton icon="pi pi-save" class="btn btn-primary" type="submit"
+                            [label]="isEditing ? ' Modifier' : ' Créer'" [disabled]="modelFactureForm.invalid">
                         </button>
                     </div>
                 </form>

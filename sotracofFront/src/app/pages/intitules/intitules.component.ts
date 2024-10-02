@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { Champs, ChampsDate, eTypeChamp } from 'src/app/config/app.model';
-import { ChampsDouble } from 'src/app/config/app.model';
-import { ChampsString } from 'src/app/config/app.model';
+import { Champs, eTypeChamp } from 'src/app/config/app.model';
 import { AppServices } from 'src/app/config/app.service';
-import { ParametreService } from 'src/app/parametre.service';
 @Component({
   selector: 'app-intitules',
   templateUrl: './intitules.component.html',
@@ -27,7 +24,7 @@ export class IntitulesComponent implements OnInit {
   ];
 
 
-  constructor(private parametreService: ParametreService,
+  constructor(
     private fb: FormBuilder,
     private champsService: AppServices,
     private messageService: MessageService
@@ -50,6 +47,7 @@ export class IntitulesComponent implements OnInit {
   }
   initForm() {
     this.champsForm = this.fb.group({
+      id:null,
       nom: ['', Validators.required],
       type: [null, Validators.required],
     })
@@ -60,67 +58,52 @@ export class IntitulesComponent implements OnInit {
   this.displayAddDialog = true;
   }
   
-  //  onSubmit() {
-  //   if (this.champsForm.valid) {
-  //     const champsData = this.champsForm.value;
-  //     console.log('Données envoyées au backend:', champsData);
-  //       this.champsService.createChamps(champsData).subscribe(
-  //         (response) => {
-  //           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ ajouté avec succès' });
-  //           this.loadChamps();  // Recharger la liste des champs après ajout
-  //           this.resetForm();
-  //           this.displayAddDialog = false;
-  //         },
-  //         (error) => {
-  //           this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de l\'ajout du champ' });
-  //         }
-  //       );
-  //   }
-  //  }
-  
-  // onSubmitModif() {
-  //   if (this.champsForm.valid) {
-  //     const champsData = this.champsForm.value;
-  //     console.log('Données envoyées au backend:', champsData);
-  //       this.champsService.updateChamps(champsData).subscribe(
-  //         (response) => {
-  //           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ mis à jour avec succès' });
-  //           this.loadChamps();  // Recharger la liste des champs après ajout
-  //           this.resetForm();
-  //           this.displayEditDialog = false;
-  //         },
-  //             (error) => {
-  //     this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du champ' });
-  //   });
-  //   }
-  //  }
-  
+  // creation
+  onSubmit() {
+    if (this.champsForm.valid) {
+      const champsData = this.champsForm.value;
+      console.log('Formulaire soumis avec les données:', champsData);
+
+      this.champsService.createChamps(champsData).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ cree avec succès' });
+          this.loadChamps();
+          this.resetForm();
+          this.displayAddDialog = false;  
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la creation du champ' });
+        }
+      );
+    }
+  }
+// modif 
 onSubmitModif() {
   if (this.champsForm.valid) {
     const champsData = this.champsForm.value;
-    console.log('Formulaire soumis avec les données:', champsData);  // Inspecte le contenu du formulaire
+    console.log('Formulaire soumis avec les données:', champsData);
 
-    if (champsData.id) {
-      console.log('ID du champ trouvé:', champsData.id);  // Affiche l'ID pour confirmation
+    if (champsData.id !== null && champsData.id !== undefined) {
+      console.log('ID du champ trouvé:', champsData.id);
       this.champsService.updateChamps(champsData).subscribe(
         (response) => {
           this.messageService.add({ severity: 'success', summary: 'Succès', detail: 'Champ mis à jour avec succès' });
-          this.loadChamps();  // Recharger la liste des champs après la mise à jour
+          this.loadChamps(); 
           this.resetForm();
-          this.displayEditDialog = false;  // Fermer le dialogue de modification
+          this.displayEditDialog = false; 
         },
         (error) => {
           this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Erreur lors de la mise à jour du champ' });
         }
       );
     } else {
-      console.error('ID manquant:', champsData);  // Log plus détaillé si l'ID est manquant
+      console.error('ID manquant:', champsData);
       this.messageService.add({ severity: 'error', summary: 'Erreur', detail: 'Le champ sélectionné est incorrect' });
     }
   }
 }
 
-
+// recuperation des doneees du champs selectionnes
   editChamps(champ: Champs) {
   this.selectedChamp = champ;
   this.champsForm.patchValue({

@@ -13,6 +13,7 @@ import { ReglementComponent } from "./pages/reglement/reglement.component";
 import { DivisionFiscaleComponent } from "./pages/division-fiscale/division-fiscale.component";
 import { RegimeFiscaleComponent } from "./pages/regime-fiscale/regime-fiscale.component";
 import { FormeJuriqueComponent } from "./pages/forme-jurique/forme-jurique.component";
+import { RegleCalculComponent } from "./pages/regle-calcul/regle-calcul.component";
 
 export const appRoutes: Routes = [
   { path: '', component: LoginComponent },
@@ -28,5 +29,6 @@ export const appRoutes: Routes = [
   { path: 'paiement', component: ReglementComponent },
   { path: 'diviFiscale', component: DivisionFiscaleComponent },
   { path: 'regimeFiscale', component: RegimeFiscaleComponent },
-  { path: 'formeJuridique', component: FormeJuriqueComponent}
+  { path: 'formeJuridique', component: FormeJuriqueComponent},
+  { path: 'regleCalcul', component: RegleCalculComponent}
 ];

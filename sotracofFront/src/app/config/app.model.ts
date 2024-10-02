@@ -8,18 +8,6 @@ export interface Client{
     tel?: string;
 
 }
-// export class LigneFacture{
-//   id!:number;
-//   champsListDate!:ChampsDate[];
-//   champsListDouble!:ChampsDouble[];
-//   champsListString!:ChampsString[];
-//   regleCalcul!: RegleCalcul;
-//   typePrestation!:TypePrestation;
-//   client!:Client;
-//   facture!:Facture;
-
-// }
-
 export interface Reglement{
 
 }
@@ -53,37 +41,6 @@ export interface DivisionFiscale{
     nom?: string;
     sigle?: string
 }
-export class ChampsDate {
-  id!: number;
-  nom!:string;
-  valeur!:Date;
-  ligneFactureList!: ModelFacture[];
-  
-
-  }
-  export class ChampsDouble {
-    id!: number;
-    nom!:string;
-    valeur!:number;
-    ligneFactureList!: ModelFacture[];
-
-    }
-    export class ChampsString {
-      id!: number;
-      nom!:string;
-      valeur!:string;
-      ligneFactureList!: ModelFacture[];
-
-      }
-// export interface ModelFacture{
-//   id?: number;
-//   nom?: string;
-//   champsListDate?: ChampsDate[];
-//   champsListDouble?: ChampsDouble[];
-//   champsListString?: ChampsString[];
-  
-// }
-
 export interface ModelFactureChamp {
     id?: number;
     modelFacture?: ModelFacture;
@@ -94,6 +51,10 @@ export interface ModelFacture {
     id?: number;
     nom?: string;
     champsList?: ModelFactureChamp[];
+    client: Client;  
+    typePrestation: TypePrestation;  
+    facture: Facture;  
+    reglesCalcul: RegleCalcul[]; 
 }
 
 export enum eTypeChamp {
@@ -105,8 +66,13 @@ export interface Champs {
     id?: number;
     nom?: string;
     type: eTypeChamp;
-    // Valeur pour chaque type de champ
     valeurString?: string;
     valeurDouble?: number;
     valeurDate?: Date;
+}
+
+export interface RegleCalcul {
+  id: number;
+  description: string;
+  valeur: number;
 }

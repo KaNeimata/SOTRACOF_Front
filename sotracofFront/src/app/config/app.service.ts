@@ -1,9 +1,8 @@
 import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import {
-  ChampsDate, Client, DivisionFiscale, ModelFacture,
-  Signataire, TypePrestation, ChampsString, ChampsDouble,
-  Champs
+import { Client, DivisionFiscale, ModelFacture,
+  Signataire, TypePrestation, Champs,
+  RegleCalcul
 } from './app.model';
 import { forkJoin, map, Observable } from "rxjs";
 import { AppEndpoint } from "./app.endpoint";
@@ -40,13 +39,13 @@ export class AppServices {
 
   // ===============================service prestation ==========================
 
-    getAllPrestation(): Observable<HttpResponse<any[]>> {
+    getAllPrestation(): Observable<HttpResponse<TypePrestation[]>> {
 
     return this.http.get<TypePrestation[]>(`${AppEndpoint.TYPE_PRESTATION_URL}`, {observe: 'response'});
 
     }
 
-    getPrestationById(id: Number): Observable<HttpResponse<Client>> {
+    getPrestationById(id: Number): Observable<HttpResponse<TypePrestation>> {
     return this.http.get<TypePrestation>(`${AppEndpoint.TYPE_PRESTATION_URL}/${id}`, { observe: 'response' });
     }
 
@@ -108,91 +107,33 @@ export class AppServices {
     return this.http.delete(`${AppEndpoint.DIVISION_FISCALE_URL}/${id}`, { observe: 'response' });
   }
 
-  // =================================== SERVICE MODEL FACTURES==================================================
-  getAllModelFacturesWithResponse(): Observable<HttpResponse<ModelFacture[]>> {
-    return this.http.get<ModelFacture[]>(`${AppEndpoint.MODEL_URL}`, { observe: 'response' });
-  }
-
-  getModelById(id: number): Observable<HttpResponse<ModelFacture>> {
-    return this.http.get<ModelFacture>(`${AppEndpoint.MODEL_URL}/${id}`, { observe: 'response' });
-  }
-
-  createModel(model: ModelFacture): Observable<HttpResponse<ModelFacture>> {
-    return this.http.post<ModelFacture>(`${AppEndpoint.MODEL_URL}`, model, { observe: 'response' });
-  }
-
-  updateModel(model: ModelFacture): Observable<HttpResponse<ModelFacture>> {
-    return this.http.put<ModelFacture>(`${AppEndpoint.MODEL_URL}`, model, { observe: 'response' });
-  }
-
-  deleteModel(id: number): Observable<HttpResponse<void>> {
-    return this.http.delete<void>(`${AppEndpoint.MODEL_URL}/${id}`, { observe: 'response' });
-  }
-
-     // =========== service dobtention de une liste de tous types de  champs==========
-  getAvailableFieldsDate(): Observable<ChampsDate[]> {
-    return this.http.get<ChampsDate[]>('http://localhost:8080/api/champs/date').pipe(
-    map(fields => fields.map(field => ({ ...field, type: 'ChampsDate' })))
-  );
-;
-
-  }
-  
-  getAvailableFieldsDouble(): Observable<ChampsDouble[]> {
-    return this.http.get<ChampsDouble[]>('http://localhost:8080/api/champs/double').pipe(
-    map(fields => fields.map(field => ({ ...field, type: 'ChampsDouble' })))
-  );
-;
-
-  }
-  
-  getAvailableFieldsString(): Observable<ChampsString[]> {
-    return this.http.get<ChampsString[]>('http://localhost:8080/api/champs/string').pipe(
-    map(fields => fields.map(field => ({ ...field, type: 'ChampsString' })))
-  );
-;
-
-  }
-  // Fonction de fusion 
-   getAllAvailableFields(): Observable<any[]> {
-    const dateFields$ = this.getAvailableFieldsDate();
-    const doubleFields$ = this.getAvailableFieldsDouble();
-    const stringFields$ = this.getAvailableFieldsString();
-
-    return forkJoin([dateFields$, doubleFields$, stringFields$]).pipe(
-      map(([dateFields, doubleFields, stringFields]) => {
-        return [...dateFields, ...doubleFields, ...stringFields];
-      })
-    );
-  }
-
-  // recuperation de clients
+  // ==============================Service de recuperation pour les relation ===========
   getAllClient(): Observable<Client[]> {
     return this.http.get<Client[]>(`${AppEndpoint.CLIENT_URL}`);
 
   }
+  getAllPrestationforOther(): Observable<TypePrestation[]> {
+    return this.http.get<TypePrestation[]>(`${AppEndpoint.TYPE_PRESTATION_URL}`);
 
-   // Récupérer tous les modèles de factures avec interface champs general
+  }
+
+  // =======================================Service modelFacture ====================
   getAllModelFactures(): Observable<HttpResponse<ModelFacture[]>> {
     return this.http.get<ModelFacture[]>(`${AppEndpoint.MODEL_FACTURE_URL}`, { observe: 'response' });
   }
 
-  // Récupérer un modèle de facture par ID
   getModelFactureById(id: number): Observable<HttpResponse<ModelFacture>> {
     return this.http.get<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}/${id}`, { observe: 'response' });
   }
 
-  // Créer un nouveau modèle de facture
   createModelFacture(dto: ModelFacture): Observable<HttpResponse<ModelFacture>> {
     return this.http.post<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}`, dto, { observe: 'response' });
   }
 
-  // Mettre à jour un modèle de facture existant
   updateModelFacture(dto: ModelFacture): Observable<HttpResponse<ModelFacture>> {
     return this.http.put<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}/${dto.id}`, dto, { observe: 'response' });
   }
 
-  // Supprimer un modèle de facture
   deleteModelFacture(id: number): Observable<HttpResponse<any>> {
     return this.http.delete(`${AppEndpoint.MODEL_FACTURE_URL}/${id}`, { observe: 'response' });
   }
@@ -210,11 +151,34 @@ export class AppServices {
   }
 
   updateChamps(dto: Champs): Observable<HttpResponse<Champs>> {
+    console.log('Données envoyées au service:', JSON.stringify(dto, null, 2));
     return this.http.put<Champs>(`${AppEndpoint.CHAMPS_URL}/${dto.id}`, dto, { observe: 'response' });
   }
 
   deleteChamps(id: number): Observable<HttpResponse<any>> {
     return this.http.delete(`${AppEndpoint.CHAMPS_URL}/${id}`, { observe: 'response' });
+  }
+
+  // ============================================ service Regle calcul =========================
+   getAllRC(): Observable<RegleCalcul[]> {
+    return this.http.get<RegleCalcul[]>(`${AppEndpoint.REGLE_CALCUL_URL}`);
+
+  }
+  getRCById(id: number): Observable<HttpResponse<RegleCalcul>> {
+    return this.http.get<RegleCalcul>(`${AppEndpoint.REGLE_CALCUL_URL}/${id}`, { observe: 'response' });
+  }
+
+  createRC(dto: RegleCalcul): Observable<HttpResponse<RegleCalcul>> {
+    return this.http.post<RegleCalcul>(`${AppEndpoint.REGLE_CALCUL_URL}`, dto, { observe: 'response' });
+  }
+
+  updateRC(dto: RegleCalcul): Observable<HttpResponse<RegleCalcul>> {
+    console.log('Données envoyées au service:', JSON.stringify(dto, null, 2));
+    return this.http.put<RegleCalcul>(`${AppEndpoint.REGLE_CALCUL_URL}/${dto.id}`, dto, { observe: 'response' });
+  }
+
+  deleteRC(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete(`${AppEndpoint.REGLE_CALCUL_URL}/${id}`, { observe: 'response' });
   }
 
 }

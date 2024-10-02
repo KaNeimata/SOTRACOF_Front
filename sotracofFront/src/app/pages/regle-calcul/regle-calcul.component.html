@@ -1,0 +1,76 @@
+<!-- messages -->
+<p-toast></p-toast>
+<app-main-header></app-main-header>
+<app-main-sidebar></app-main-sidebar>
+<div class="wrapper">
+    <div class="content-wrapper" style="padding: 30px;">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Gestion des intitules</h1>
+                    </div>
+                </div>
+            </div>
+        </section>
+<div class="p-grid">
+    <!-- Liste des règles de calcul -->
+    <div class="p-col-12">
+        <button pButton label="Créer une nouvelle règle" icon="pi pi-plus" (click)="openCreateDialog()"></button>
+        <p-table [value]="reglesCalcul">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Nom</th>
+                    <th>Formule</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-regle>
+                <tr>
+                    <td>{{ regle.nom }}</td>
+                    <td>{{ regle.formule }}</td>
+                    <td>{{ regle.type }}</td>
+                    <td>
+                        <button pButton icon="pi pi-pencil" (click)="openEditDialog(regle)"></button>
+                        <button pButton icon="pi pi-trash" (click)="deleteRegleCalcul(regle.id)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- p-dialog pour créer ou modifier une règle de calcul -->
+    <p-dialog header="{{ isEditMode ? 'Modifier la règle' : 'Créer une nouvelle règle' }}" [(visible)]="displayDialog"
+        [closable]="false" [style]="{width: '400px'}">
+        <form [formGroup]="regleCalculForm">
+            <!-- Nom de la règle -->
+            <div class="p-field">
+                <label for="nom">Nom</label>
+                <input id="nom" type="text" pInputText formControlName="nom" />
+            </div>
+
+            <!-- Formule de la règle -->
+            <div class="p-field">
+                <label for="formule">Formule</label>
+                <input id="formule" type="text" pInputText formControlName="formule" />
+            </div>
+
+            <!-- Type de la règle -->
+            <div class="p-field">
+                <label for="type">Type</label>
+                <input id="type" type="text" pInputText formControlName="type" />
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="p-field">
+                <button pButton label="{{ isEditMode ? 'Modifier' : 'Créer' }}" icon="pi pi-check"
+                    (click)="isEditMode ? submitModif() : submit()" [disabled]="regleCalculForm.invalid"></button>
+                <button pButton label="Annuler" icon="pi pi-times" class="p-button-secondary"
+                    (click)="closeDialog()"></button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+</div>
+</div>

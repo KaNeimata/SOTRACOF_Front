@@ -7,3 +7,6 @@
     color: #fff;
     background-color: #007bff;
 }
+footer {
+    display: none !important;
+}

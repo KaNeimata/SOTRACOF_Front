@@ -28,6 +28,7 @@ import { SocieteComponent } from './pages/societe/societe.component';
 import { RegimeFiscaleComponent } from './pages/regime-fiscale/regime-fiscale.component';
 import { CompteComponent } from './pages/compte/compte.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { RegleCalculComponent } from './pages/regle-calcul/regle-calcul.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     DivisionFiscaleComponent,
     SocieteComponent,
     RegimeFiscaleComponent,
-    CompteComponent
+    CompteComponent,
+    RegleCalculComponent
   ],
   imports: [
     BrowserModule,
