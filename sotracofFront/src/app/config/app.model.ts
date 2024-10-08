@@ -14,21 +14,31 @@ export interface Reglement{
 export interface Compte{
 
 }
-export interface Facture{
-
+export interface Facture {
+    id?: number;
+    numero: string;
+    sticker: string;
+    tva: boolean;
+    montantTva?: number;
+    montantExonore?: number;
+    montantNonExonore?: number;
+    montantLettre: string;
+    status: string;
+    date: Date;
+    client: Client;
+    typePrestation: TypePrestation;
+    signataire: Signataire;
+    champs: FactureChamps[];
 }
-export class RegleCalcul{
-  id!:number;
-  nom!:string;
-  FormeCalcule!:string;
-  ligneFacture!: ModelFacture [];
 
+export interface FactureChamps {
+    champId: number;
+    nom: string;
+    valeur: string;
 }
 export interface TypePrestation{
     id?: number;
     nom?: string;
-    // factureList?: Facture[];
-    // ligneFactureList?: LigneFacture[];
 }
 export interface Signataire{
     id?: number;

@@ -64,12 +64,6 @@ export class ModelFactureComponent implements OnInit {
   }
 // charger clients 
   loadClients() {
-    // this.modelFactureService.getAllClient().subscribe((clt: Client[]) => { 
-    //   this.clients = clt.map(client => ({
-    //     id: client.id,
-    //     nom: client.nom
-    //   }));
-    // });
     this.modelFactureService.getAllClient().subscribe(
       (clients: Client[]) => {
         this.clients = clients.map(client => ({

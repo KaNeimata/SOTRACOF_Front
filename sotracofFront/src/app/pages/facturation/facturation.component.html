@@ -1,4 +1,101 @@
 <app-main-header></app-main-header>
 <app-main-sidebar></app-main-sidebar>
 <!-- <app-main-content-wrapper></app-main-content-wrapper> -->
+<p-toast></p-toast>
+<div class="wrapper">
+    <div class="content-wrapper" style="padding: 30px;">
+        <div class="p-grid">
+            <div class="p-col-12 p-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h3><strong>Liste des factures</strong></h3>
+                            </div>
+                            <div>
+                                <button pButton icon="pi pi-plus" class="btn btn-primary" (click)="openAddDialog()"
+                                    label=" Ajouter">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding: 20px;">
+                        <p-table [value]="factures" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" responsiveLayout="scroll"
+                            currentPageReportTemplate="Affichage {first} à {last} sur {totalRecords} factures"
+                            [rowsPerPageOptions]="[10,25,50]">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th>Numéro</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Client</th>
+                                    <th>Type de Prestation</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-facture>
+                                <tr>
+                                    <td>{{facture.numero}}</td>
+                                    <td>{{facture.date | date:'dd/MM/yyyy'}}</td>
+                                    <td>{{facture.status}}</td>
+                                    <td>{{facture.client.nom}}</td>
+                                    <td>{{facture.typePrestation.nom}}</td>
+                                    <td>
+                                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                                            (click)="openEditDialog(facture)"></button>
+                                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                                            (click)="deleteFacture(facture.id)"></button>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        </div>
+                        
+                        <p-dialog [(visible)]="factureDialog" [style]="{width: '450px'}" header="Détails de la Facture" [modal]="true"
+                            styleClass="p-fluid">
+                            <ng-template pTemplate="content">
+                                <div class="p-field">
+                                    <label for="numero">Numéro</label>
+                                    <input type="text" pInputText id="numero" [(ngModel)]="selectedFacture.numero" required autofocus />
+                                </div>
+                                <div class="p-field">
+                                    <label for="date">Date</label>
+                                    <p-calendar id="date" [(ngModel)]="selectedFacture.date" dateFormat="dd/mm/yy"></p-calendar>
+                                </div>
+                                <div class="p-field">
+                                    <label for="status">Status</label>
+                                    <p-dropdown id="status" [options]="['En cours', 'Payée', 'Annulée']" [(ngModel)]="selectedFacture.status"
+                                        placeholder="Sélectionner un statut"></p-dropdown>
+                                </div>
+                                <div class="p-field">
+                                    <label for="client">Client</label>
+                                    <p-dropdown id="client" [options]="clients" [(ngModel)]="selectedFacture.client" optionLabel="nom"
+                                        (onChange)="onClientChange()" placeholder="Sélectionner un client"></p-dropdown>
+                                </div>
+                                <div class="p-field">
+                                    <label for="typePrestation">Type de Prestation</label>
+                                    <p-dropdown id="typePrestation" [options]="typePrestations" [(ngModel)]="selectedFacture.typePrestation"
+                                        optionLabel="nom" (onChange)="onClientChange()"
+                                        placeholder="Sélectionner un type de prestation"></p-dropdown>
+                                </div>
+                                <div class="p-field">
+                                    <label for="signataire">Signataire</label>
+                                    <p-dropdown id="signataire" [options]="signataires" [(ngModel)]="selectedFacture.signataire"
+                                        optionLabel="nom" placeholder="Sélectionner un signataire"></p-dropdown>
+                                </div>
+                                <div *ngFor="let champ of selectedFacture.champs; let i = index" class="p-field">
+                                    <label [for]="'champ' + i">{{champ.nom}}</label>
+                                    <input [id]="'champ' + i" type="text" pInputText [(ngModel)]="champ.valeur" required />
+                                </div>
+                            </ng-template>
+                        
+                            <ng-template pTemplate="footer">
+                                <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text"
+                                    (click)="hideDialog()"></button>
+                                <button pButton pRipple label="Sauvegarder" icon="pi pi-check" class="p-button-text"
+                                    (click)="saveFacture()"></button>
+                            </ng-template>
+                        </p-dialog>
+
+
 <app-main-footer></app-main-footer>

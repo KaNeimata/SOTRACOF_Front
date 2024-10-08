@@ -18,9 +18,9 @@ export class IntitulesComponent implements OnInit {
   displayEditDialog: boolean = false; 
 
   typeOptions = [
-    { label: 'Texte', value: eTypeChamp.STRING },
-    { label: 'Nombre', value: eTypeChamp.DOUBLE },
-    { label: 'Date', value: eTypeChamp.DATE }
+    { label: ' Texte', value: eTypeChamp.STRING },
+    { label: ' Nombre', value: eTypeChamp.DOUBLE },
+    { label: ' Date', value: eTypeChamp.DATE }
   ];
 
 

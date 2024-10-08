@@ -2,7 +2,9 @@ import { HttpClient, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Client, DivisionFiscale, ModelFacture,
   Signataire, TypePrestation, Champs,
-  RegleCalcul
+  RegleCalcul,
+  Facture,
+  FactureChamps
 } from './app.model';
 import { forkJoin, map, Observable } from "rxjs";
 import { AppEndpoint } from "./app.endpoint";
@@ -121,7 +123,10 @@ export class AppServices {
   getAllModelFactures(): Observable<HttpResponse<ModelFacture[]>> {
     return this.http.get<ModelFacture[]>(`${AppEndpoint.MODEL_FACTURE_URL}`, { observe: 'response' });
   }
-
+// liste si client et type service sont selectionnes
+  getAllModelFacture(clientId: number, typePrestationId: number): Observable<ModelFacture> {
+  return this.http.get<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}?clientId=${clientId}&typePrestationId=${typePrestationId}`);
+}
   getModelFactureById(id: number): Observable<HttpResponse<ModelFacture>> {
     return this.http.get<ModelFacture>(`${AppEndpoint.MODEL_FACTURE_URL}/${id}`, { observe: 'response' });
   }
@@ -137,6 +142,7 @@ export class AppServices {
   deleteModelFacture(id: number): Observable<HttpResponse<any>> {
     return this.http.delete(`${AppEndpoint.MODEL_FACTURE_URL}/${id}`, { observe: 'response' });
   }
+
 // ============================================ service champs =========================
    getAllChamps(): Observable<Champs[]> {
     return this.http.get<Champs[]>(`${AppEndpoint.CHAMPS_URL}`);
@@ -180,5 +186,48 @@ export class AppServices {
   deleteRC(id: number): Observable<HttpResponse<any>> {
     return this.http.delete(`${AppEndpoint.REGLE_CALCUL_URL}/${id}`, { observe: 'response' });
   }
+
+  // =======================================Service Facture ====================
+  getAllFactures(): Observable<Facture[]> {
+    return this.http.get<Facture[]>(`${AppEndpoint.FACTURE_URL}`);
+  }
+
+  getFactureById(id: number): Observable<HttpResponse<Facture>> {
+    return this.http.get<Facture>(`${AppEndpoint.FACTURE_URL}/${id}`, { observe: 'response' });
+  }
+
+  createFacture(dto: Facture): Observable<HttpResponse<Facture>> {
+    return this.http.post<Facture>(`${AppEndpoint.FACTURE_URL}`, dto, { observe: 'response' });
+  }
+
+  updateFacture(dto: Facture): Observable<HttpResponse<Facture>> {
+    return this.http.put<Facture>(`${AppEndpoint.FACTURE_URL}/${dto.id}`, dto, { observe: 'response' });
+  }
+
+  deleteFacture(id: number): Observable<HttpResponse<any>> {
+    return this.http.delete(`${AppEndpoint.FACTURE_URL}/${id}`, { observe: 'response' });
+  }
+
+   // CRUD spécifique pour les FactureChamps
+  // Récupérer tous les champs d'une facture
+  getAllChampsForFacture(factureId: number): Observable<HttpResponse<FactureChamps[]>> {
+    return this.http.get<FactureChamps[]>(`${AppEndpoint.FACTURE_URL}/${factureId}/champs`, { observe: 'response' });
+  }
+
+  // Ajouter un champ à une facture
+  addChampToFacture(factureId: number, champ: FactureChamps): Observable<HttpResponse<FactureChamps>> {
+    return this.http.post<FactureChamps>(`${AppEndpoint.FACTURE_URL}/${factureId}/champs`, champ, { observe: 'response' });
+  }
+
+  // Mettre à jour un champ d'une facture
+  updateChampInFacture(factureId: number, champ: FactureChamps): Observable<HttpResponse<FactureChamps>> {
+    return this.http.put<FactureChamps>(`${AppEndpoint.FACTURE_URL}/${factureId}/champs/${champ.champId}`, champ, { observe: 'response' });
+  }
+
+  // Supprimer un champ d'une facture
+  deleteChampFromFacture(factureId: number, champId: number): Observable<HttpResponse<void>> {
+    return this.http.delete<void>(`${AppEndpoint.FACTURE_URL}/${factureId}/champs/${champId}`, { observe: 'response' });
+  }
+
 
 }

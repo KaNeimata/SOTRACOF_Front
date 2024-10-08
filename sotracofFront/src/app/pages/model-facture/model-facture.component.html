@@ -61,7 +61,7 @@
             </div>
 
 <!-- modif  et ceation -->
-        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="false" [responsive]="true" [baseZIndex]="10000"
+        <p-dialog [(visible)]="displayDialog" [modal]="true" [closable]="true" [responsive]="true" [baseZIndex]="10000"
             [style]="{'width': '600px'}" [contentStyle]="{ 'backdrop-filter': 'blur(10px)' }">
             <div>
                 <form [formGroup]="modelFactureForm" (ngSubmit)="isEditing ? submitModif() : onSubmit()">
